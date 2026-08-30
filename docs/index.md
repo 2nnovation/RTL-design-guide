@@ -69,6 +69,10 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 
 - [What Makes Good RTL?](00_introduction/overview.md): RTL, synthesis, gate, physical implementation을 하나의 feedback loop로 이해합니다.
 - [Canonical RTL Design Terminology](01_fundamentals/terminology.md): latency, timing, clock, CDC와 PPA 공통 용어를 한 곳에서 정의합니다.
+- [Think Hardware, Not Code](01_fundamentals/think_hardware_not_code.md): RTL 문법을 register, combinational cone, priority, parallelism과 cycle contract로 해석합니다.
+- [Combinational vs Sequential Logic](01_fundamentals/combinational_vs_sequential.md): 현재 입력의 함수와 state를 구분하고 register boundary, latch와 cycle alignment를 설계합니다.
+- [Priority and MUX](01_fundamentals/priority_and_mux.md): simultaneous event의 functional priority와 MUX·decode structure의 비용을 구분합니다.
+- [Width and Signedness](01_fundamentals/width_and_signedness.md): range, arithmetic growth, implicit conversion과 four-state simulation을 hardware cost에 연결합니다.
 - [Documentation Roadmap](00_introduction/roadmap.md): V0.1 이후 전체 Chapter의 책임과 작성 순서를 관리합니다.
 
 ### Timing

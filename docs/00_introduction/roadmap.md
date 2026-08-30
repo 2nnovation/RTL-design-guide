@@ -58,7 +58,7 @@ Release 전 남은 공통 검증:
 - priority와 mutual exclusivity
 - width, signedness와 four-state simulation basics
 
-우선 작성: `think_hardware_not_code.md`, `combinational_vs_sequential.md`, `priority_and_mux.md`, `width_and_signedness.md`
+작성 완료: `think_hardware_not_code.md`, `combinational_vs_sequential.md`, `priority_and_mux.md`, `width_and_signedness.md`
 
 ### 02. Architecture & Microarchitecture
 

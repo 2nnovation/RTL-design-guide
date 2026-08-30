@@ -63,6 +63,10 @@ nav:
       - Documentation Roadmap: 00_introduction/roadmap.md
   - 01. RTL Design Fundamentals:
       - Canonical Terminology: 01_fundamentals/terminology.md
+      - Think Hardware, Not Code: 01_fundamentals/think_hardware_not_code.md
+      - Combinational vs Sequential: 01_fundamentals/combinational_vs_sequential.md
+      - Priority and MUX: 01_fundamentals/priority_and_mux.md
+      - Width and Signedness: 01_fundamentals/width_and_signedness.md
   - 03. Timing:
       - Overview: 03_timing/overview.md
       - Critical Path: 03_timing/critical_path.md

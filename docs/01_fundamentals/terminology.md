@@ -18,6 +18,8 @@
 
 `if`, `case`, loop와 function은 문법 이름이다. 합성 후 hardware는 MUX, decoder, comparator, arithmetic logic, FF와 wiring의 조합으로 구현될 수 있다. 문법만 보고 구조를 단정하지 말고 synthesis result를 확인한다.
 
+문법을 실제 구조와 cycle behavior로 번역하는 방법은 [Think Hardware, Not Code](think_hardware_not_code.md)를 참고한다. State와 combinational cone의 구분은 [Combinational vs Sequential Logic](combinational_vs_sequential.md), simultaneous selection은 [Priority and MUX](priority_and_mux.md), numeric range와 conversion은 [Width and Signedness](width_and_signedness.md)에서 canonical하게 다룬다.
+
 ## 2. Clock와 Cycle
 
 ### Clock edge
