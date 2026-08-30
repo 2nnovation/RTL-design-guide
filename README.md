@@ -2,6 +2,8 @@
 
 > RTL은 단순히 동작하는 코드를 작성하는 것이 아니라, 원하는 Hardware Architecture를 기술하는 것이다.
 
+📖 **[문서 사이트 바로가기](https://2nnovation.github.io/RTL-design-guide/)**
+
 **RTL Design & Optimization Guide**는 Digital RTL 설계자가 문법을 넘어 Architecture, Timing, Power, Area, Clock, CDC, Verification 관점에서 설계 결정을 내리고 리뷰할 수 있도록 돕는 실무형 지식 베이스입니다.
 
 좋은 RTL은 simulation에서 기대한 값이 나오는 것만으로 충분하지 않습니다. 요구 기능을 만족하면서도 구현 가능한 timing, 합리적인 power와 area, clock/reset/CDC의 안전성, 검증 가능성, 그리고 변경에 견디는 maintainability를 함께 갖춰야 합니다.
