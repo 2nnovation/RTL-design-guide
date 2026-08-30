@@ -1,0 +1,96 @@
+site_name: RTL Design & Optimization Guide
+site_description: Practical RTL architecture, timing, power, clock, CDC, and design review guidance
+site_url: https://2nnovation.github.io/RTL-design-guide/
+repo_url: https://github.com/2nnovation/RTL-design-guide
+repo_name: 2nnovation/RTL-design-guide
+
+theme:
+  name: material
+  language: ko
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode로 전환
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Light mode로 전환
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
+
+nav:
+  - Home: index.md
+  - 00. Introduction:
+      - What Makes Good RTL?: 00_introduction/overview.md
+      - Documentation Roadmap: 00_introduction/roadmap.md
+  - 01. RTL Design Fundamentals:
+      - Canonical Terminology: 01_fundamentals/terminology.md
+  - 03. Timing:
+      - Overview: 03_timing/overview.md
+      - Critical Path: 03_timing/critical_path.md
+      - Pipeline: 03_timing/pipeline.md
+      - Multi-Cycle Path: 03_timing/multi_cycle_path.md
+  - 04. Low Power:
+      - Overview: 04_low_power/overview.md
+      - Register Enable: 04_low_power/register_enable.md
+      - Counter Optimization: 04_low_power/counter_optimization.md
+      - Operand Isolation: 04_low_power/operand_isolation.md
+  - 06. Clock & Clock Gating:
+      - Overview: 06_clock/overview.md
+      - Clock Gating: 06_clock/clock_gating.md
+      - Inferred vs Explicit: 06_clock/inferred_vs_explicit.md
+      - Root vs Function Clock: 06_clock/root_vs_function_clock.md
+  - 08. Clock Domain Crossing:
+      - Overview: 08_cdc/overview.md
+      - Metastability: 08_cdc/metastability.md
+      - 2FF Synchronizer: 08_cdc/synchronizer.md
+      - Pulse Crossing: 08_cdc/pulse_crossing.md
+      - Multi-Bit CDC: 08_cdc/multi_bit_cdc.md
+      - Bundled Data: 08_cdc/bundled_data.md
+  - 15. Design Review Checklist:
+      - RTL Design Review Checklist: 15_checklist/rtl_design_review_checklist.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/2nnovation/RTL-design-guide
+
+copyright: Generic educational material for public use
