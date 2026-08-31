@@ -229,3 +229,4 @@ Assertion은 no-loss, no-duplicate, ordering과 bounded response를 protocol ass
 - [Metastability](metastability.md)
 - [2FF Synchronizer](synchronizer.md)
 - [Multi-Bit CDC](multi_bit_cdc.md)
+- [Pulse, Level, and Event](../09_control_logic/pulse_level_event.md)

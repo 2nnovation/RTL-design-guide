@@ -102,6 +102,8 @@ Clock gating은 data path setup violation을 숨기는 방법이 아니다. Data
 
 Synchronous reset은 active clock edge가 있어야 적용된다. Clock이 off인 상태에서 reset을 요구한다면 clock-on sequence, asynchronous assertion 또는 별도 reset architecture가 필요하다.
 
+Reset source, domain-local release와 reset-done sequencing은 [Reset Architecture Overview](../07_reset/overview.md), gated/stopped clock의 구체적인 sequence는 [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md)을 따른다.
+
 Scan/test mode에서는 gated branch에 controllable clock이 필요할 수 있다. Functional enable과 test enable의 결합·priority는 library와 DFT methodology에 맞춰야 한다.
 
 ## 8. Physical and Power View
@@ -144,3 +146,6 @@ Gated register 수, idle duty cycle, switching activity와 physical clock load�
 - [Inferred vs Explicit Clock Gating](inferred_vs_explicit.md)
 - [Root Clock vs Function Clock](root_vs_function_clock.md)
 - [Register Enable](../04_low_power/register_enable.md)
+- [Reset Architecture Overview](../07_reset/overview.md)
+- [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md)
+- [Reset Area Cost](../05_area/reset_area_cost.md)

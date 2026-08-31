@@ -296,7 +296,7 @@ Reset은 synchronizer 설계에서 자주 간과되는 또 하나의 asynchronou
 
 Asynchronous reset이 destination edge 근처에서 deassert되면 recovery/removal requirement를 위반해 synchronizer register 자체가 metastable하거나 stage들이 서로 다른 cycle에 reset에서 풀릴 수 있다. 일반적인 방향은 reset을 asynchronously assert할 수 있더라도 destination domain에 대해 synchronously deassert하는 것이다.
 
-구체적인 reset synchronizer 구조와 cell 사용은 project의 RDC methodology를 따른다.
+구체적인 reset synchronizer 구조와 cell 사용은 project의 RDC methodology와 [Reset Deassertion and RDC](../07_reset/reset_deassertion.md)를 따른다.
 
 ### 10.2 Resetting both stages
 
@@ -594,3 +594,4 @@ Verify placement, resolution time, and required MTBF
 - [Pulse Crossing](pulse_crossing.md): plain 2FF가 short event를 놓칠 수 있는 이유와 대안
 - [Multi-Bit CDC](multi_bit_cdc.md): independent synchronizer가 coherency를 보장하지 못하는 이유
 - [Bundled Data](bundled_data.md): multi-bit snapshot의 payload/control protocol
+- [Reset Deassertion and RDC](../07_reset/reset_deassertion.md): data synchronizer와 구분되는 reset release structure

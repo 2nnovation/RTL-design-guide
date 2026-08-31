@@ -120,6 +120,8 @@ Function clock이 off이면 reset을 적용할 edge가 없다. 가능한 archite
 
 Assertion은 clock 없이 가능할 수 있지만 deassertion의 recovery/removal와 domain-local synchronization이 필요하다. Clock이 멈춘 상태에서는 synchronous release sequence가 진행되지 않는다.
 
+Reset request부터 clock force-on, local release와 ready까지의 canonical sequence는 [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md), release synchronizer는 [Reset Deassertion and RDC](../07_reset/reset_deassertion.md)를 따른다.
+
 ## 7. CDC and Event Retention
 
 Function clock이 멈춰 있으면 destination synchronizer도 진행하지 않는다. 짧은 wake pulse는 사라질 수 있다.
@@ -198,4 +200,6 @@ Self-deadlock은 liveness property로 검증할 수 있다. Environment가 root 
 - [Clock Design Overview](overview.md)
 - [Clock Gating](clock_gating.md)
 - [Inferred vs Explicit Clock Gating](inferred_vs_explicit.md)
+- [State Partitioning and Ownership](../02_architecture/state_partitioning_and_ownership.md)
+- [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md)
 - [CDC Overview](../08_cdc/overview.md)

@@ -173,7 +173,7 @@ Enable fanout와 timing cost를 확인한다.
 
 ### Elastic pipeline
 
-각 stage가 valid/ready handshake와 storage를 가져 downstream stall을 흡수한다. Throughput 유연성은 좋아지지만 control, area와 formal verification 복잡도가 증가한다.
+각 stage가 valid/ready handshake와 storage를 가져 downstream stall을 흡수한다. Throughput 유연성은 좋아지지만 control, area와 formal verification 복잡도가 증가한다. One-entry buffer, registered ready와 skid capacity는 [Buffering and Backpressure](../02_architecture/buffering_and_backpressure.md)를 참고한다.
 
 ### Flush
 
@@ -199,7 +199,7 @@ state[n] ── combinational update ──> state[n+1]
 - multi-cycle iteration
 - target frequency 완화
 
-Feedback path에는 pipeline register를 “그냥 한 개” 넣을 수 없다.
+Feedback path에는 pipeline register를 “그냥 한 개” 넣을 수 없다. Dependency distance, same-context II와 가능한 transformation은 [Feedback Dependency](../02_architecture/feedback_dependency.md)를 참고한다.
 
 ## 8. Pipeline vs Parallel Pre-computation vs MCP
 
@@ -212,7 +212,7 @@ Feedback path에는 pipeline register를 “그냥 한 개” 넣을 수 없다.
 | Power | clock/data FF 증가 | switching 증가 가능 | long combinational activity 유지 |
 | 주요 위험 | alignment/stall/flush | area와 glitch | 잘못된 exception |
 
-결과가 반드시 next cycle에 필요하고 latency를 늘릴 수 없다면 parallel/pre-computation을 검토할 수 있다. Architecture가 이미 여러 cycle 뒤에만 capture한다면 [MCP](multi_cycle_path.md)가 맞을 수 있다.
+결과가 반드시 next cycle에 필요하고 latency를 늘릴 수 없다면 [Parallelism and Pre-computation](../02_architecture/parallelism_and_precomputation.md)을 검토할 수 있다. Architecture가 이미 여러 cycle 뒤에만 capture한다면 [MCP](multi_cycle_path.md)가 맞을 수 있다.
 
 ## 9. Reset Strategy
 
@@ -232,6 +232,8 @@ payload data         ── may not need reset if invalid is enforced
 - safety requirement
 - output이 valid 없이 관찰될 가능성
 - reset 중 clock gating과 stage enable
+
+Valid-only reset의 observer, ready/accept, X와 back-to-back cycle contract는 [Resetless Datapath](../07_reset/resetless_datapath.md)를 따른다. Reset cell/tree 비용은 [Reset Area Cost](../05_area/reset_area_cost.md)에서 별도로 평가한다.
 
 ## 10. PPA Impact
 
@@ -311,4 +313,5 @@ Latency가 달라졌으므로 cycle-by-cycle equivalence보다 latency mapping�
 - [Timing Design & Optimization](overview.md)
 - [Critical Path](critical_path.md)
 - [Multi-Cycle Path](multi_cycle_path.md)
+- [Resetless Datapath](../07_reset/resetless_datapath.md)
 - [Low-Power RTL Design](../04_low_power/overview.md)

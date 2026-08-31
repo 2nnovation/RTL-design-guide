@@ -379,4 +379,4 @@ Simulation과 synthesis가 X를 다르게 활용하면 mismatch 위험이 있다
 - [ ] Synthesis operator/register width가 예상과 일치하는가?
 - [ ] Width 축소의 integration, timing, power와 area 영향을 측정했는가?
 
-전체 검토에는 [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)를 함께 사용한다.
+Range-driven area optimization, parameter guard와 FIFO occupancy/pointer width 적용은 [Bit-Width Minimization](../05_area/bit_width_minimization.md)을 참고한다. 전체 검토에는 [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)를 함께 사용한다.

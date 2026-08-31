@@ -310,7 +310,7 @@ Synthesis 결과가 예상과 다르면 code를 무작정 더 복잡하게 만�
 | Width 축소 | arithmetic/compare delay 개선 가능 | switched capacitance 감소 가능 | FF/operator/routing 감소 가능 |
 | Register enable | enable path 또는 feedback MUX 영향 | 불필요한 update 감소 가능 | enable logic과 gating overhead |
 
-이는 방향성이다. 실제 결과는 library, constraints, physical placement와 activity workload에 따라 달라진다. 특히 sharing과 duplication은 area와 timing을 반대 방향으로 움직일 수 있으므로 report 비교가 필요하다.
+이는 방향성이다. 실제 결과는 library, constraints, physical placement와 activity workload에 따라 달라진다. 특히 sharing과 duplication은 area와 timing을 반대 방향으로 움직일 수 있으므로 report 비교가 필요하다. 전체 비교 boundary를 정하는 방법은 [Resource Sharing vs Duplication](../02_architecture/resource_sharing_vs_duplication.md)을 참고한다.
 
 ## 8. Common Mistakes
 
@@ -382,4 +382,4 @@ Assertion은 source-code statement가 아니라 architecture contract를 표현�
 - [ ] Synthesis report와 timing path가 예상한 hardware structure와 일치하는가?
 - [ ] Tool-dependent mapping을 RTL 모양만으로 단정하지 않았는가?
 
-전체 설계 검토에는 [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)를 함께 사용한다.
+Array와 memory mapping을 구체화할 때는 [Memory and Register Array](../05_area/memory_and_register_array.md), 전체 설계 검토에는 [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)를 함께 사용한다.

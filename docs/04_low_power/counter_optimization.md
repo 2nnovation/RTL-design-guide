@@ -304,7 +304,7 @@ counter의 Q가 hold되어도 clock pin에는 clock이 계속 들어올 수 있�
 
 기존 `operation_active` 대신 이미 있는 `count_active`를 사용하고 `event_a` clear condition을 제거하면 control logic이 단순해질 가능성이 있다. counter FF 수와 incrementer width 자체는 보통 변하지 않는다.
 
-반대로 별도 `count_active` FF, decode, isolation mux 또는 ICG를 추가하면 area가 늘 수 있다. 작은 counter에서는 이 overhead가 상대적으로 크다. width가 실제 count 범위보다 넓다면 enable 최적화와 별개로 width 축소를 검토한다. width 감소는 FF뿐 아니라 incrementer, comparator, mux와 routing에도 영향을 줄 수 있다.
+반대로 별도 `count_active` FF, decode, isolation mux 또는 ICG를 추가하면 area가 늘 수 있다. 작은 counter에서는 이 overhead가 상대적으로 크다. width가 실제 count 범위보다 넓다면 enable 최적화와 별개로 [Bit-Width Minimization](../05_area/bit_width_minimization.md)을 검토한다. Width 감소는 FF뿐 아니라 incrementer, comparator, mux와 routing에도 영향을 줄 수 있다.
 
 ### Timing
 
@@ -582,3 +582,4 @@ flowchart TD
 
 - [Low-Power RTL Design](overview.md): switching activity, register enable과 operand isolation의 전체 관점
 - [Clock Gating](../06_clock/clock_gating.md): enable과 실제 clock activity 제어의 차이
+- [Counter Boundary Design](../09_control_logic/counter_boundary.md): terminal, wrap/saturate/block, overflow와 underflow의 기능 계약

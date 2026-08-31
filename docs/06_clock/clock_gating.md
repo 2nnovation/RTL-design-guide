@@ -372,6 +372,8 @@ Asynchronous assertion은 clock이 멈춰 있어도 cell state를 reset할 수 �
 
 Reset solution을 고를 때는 library support, DFT, RDC analysis와 physical reset network까지 함께 검토한다.
 
+Reset source, per-domain deassertion과 `reset_done`은 [Reset Architecture Overview](../07_reset/overview.md), clock force-on부터 regating까지의 sequence는 [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md)을 따른다.
+
 ## 11. DFT and Test Considerations
 
 Functional mode에서 clock을 잘 멈추는 설계도 scan shift, ATPG, memory test 또는 debug mode에서는 clock controllability를 방해할 수 있다. 일반적인 ICG interface가 test enable 또는 scan enable을 제공하는 이유다.
@@ -580,3 +582,4 @@ Measure post-synthesis and physical PPA
 - [Inferred vs Explicit Clock Gating](inferred_vs_explicit.md): insertion 책임과 fine/coarse-grain 선택
 - [Root Clock vs Function Clock](root_vs_function_clock.md): always-on partition과 sleep/wake protocol
 - [Register Enable](../04_low_power/register_enable.md): data update condition과 feedback MUX
+- [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md): clock force-on, local release와 reset-done protocol

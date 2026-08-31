@@ -1,6 +1,6 @@
 # Timing Design & Optimization
 
-> **Timing optimization은 느린 RTL 문장을 빠르게 고치는 일이 아니다.**  
+> **Timing optimization은 느린 RTL 문장을 빠르게 고치는 일이 아니다.**
 > 데이터가 언제 생성되고, 언제까지 도착해야 하며, 어느 clock edge에서 소비되는지를 architecture와 일치시키는 일이다.
 
 기능 시뮬레이션(functional simulation)이 통과해도 실제 회로가 목표 주파수에서 동작한다는 보장은 없다. 시뮬레이터는 보통 RTL 연산을 이상적인 zero-delay 동작으로 취급하지만, 합성(synthesis)된 회로에는 flip-flop의 지연, combinational logic의 지연, 배선 지연, clock skew와 jitter가 존재한다. Timing design은 이 물리적 시간을 설계 요구사항 안에 배치하는 과정이다.
@@ -476,8 +476,10 @@ Hold, clock interaction, mode/corner와 timing exception의 범위도 함께 확
 
 ## 9. 다음 문서
 
+- [Architectural Timing Budget](../02_architecture/architectural_timing_budget.md): interface requirement를 stage budget과 implementation evidence로 연결하는 방법
 - [Critical Path](critical_path.md): timing report의 cell/net/control/physical 원인을 분리하는 방법
 - [Pipeline Design](pipeline.md): latency와 throughput을 구분하고 stage를 균형 있게 나누는 방법
 - [Multi-Cycle Path](multi_cycle_path.md): 여러 cycle 뒤 capture하는 functional contract를 STA에 안전하게 표현하는 방법
+- [Physical Area and Congestion](../05_area/physical_area_and_congestion.md): cell/net delay와 congestion을 실제 block footprint evidence로 연결하는 방법
 - [CDC Overview](../08_cdc/overview.md): 서로 다른 clock domain 사이에서 timing constraint만으로 해결할 수 없는 문제
 - [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md): Architecture, timing, power, clock, CDC를 함께 검토하는 체크리스트

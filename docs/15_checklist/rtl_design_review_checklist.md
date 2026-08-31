@@ -110,6 +110,8 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 | 0 | 1 | 1 | Explicit priority | Test / assertion |
 | 1 | 1 | 1 | Explicit priority | Test / assertion |
 
+관련 상세 가이드: [FSM Design](../09_control_logic/fsm_design.md), [Priority and Simultaneous Events](../09_control_logic/priority_and_simultaneous_events.md), [Pulse, Level, and Event](../09_control_logic/pulse_level_event.md), [Counter Boundary Design](../09_control_logic/counter_boundary.md), [Illegal State Recovery](../09_control_logic/illegal_state_recovery.md)
+
 ## 6. Timing
 
 - [ ] 주요 register-to-register, input-to-register, register-to-output path를 식별했는가?
@@ -205,6 +207,8 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Reset value가 실제 idle/protocol state와 일치하는가?
 - [ ] Partial reset domain 사이의 stale/invalid data 사용을 막는가?
 - [ ] Reset과 request/clear/capture가 겹칠 때 priority를 검증했는가?
+
+관련 문서: [Reset Architecture Overview](../07_reset/overview.md), [Synchronous vs Asynchronous Reset](../07_reset/sync_vs_async_reset.md), [Reset Deassertion and RDC](../07_reset/reset_deassertion.md), [Resetless Datapath](../07_reset/resetless_datapath.md), [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md)
 
 ## 11. Clock Domain Crossing
 
@@ -312,6 +316,8 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] 변경으로 영향을 받는 downstream interface와 artifact가 식별되었다.
 
 ### Decision record
+
+후보 비교, evidence와 change trigger를 남기는 형식은 [Microarchitecture Decision Record](../02_architecture/microarchitecture_decision_record.md)를 참고합니다.
 
 | Decision / issue | Evidence | Trade-off | Owner | Status / follow-up |
 |---|---|---|---|---|

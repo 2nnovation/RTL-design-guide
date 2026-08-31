@@ -70,7 +70,9 @@ Release 전 남은 공통 검증:
 - pre-computation
 - architectural timing budget
 
-우선 작성: `requirement_to_microarchitecture.md`, `latency_throughput_ii.md`, `resource_sharing_vs_duplication.md`, `feedback_dependency.md`, `architectural_timing_budget.md`
+작성 완료: `requirement_to_microarchitecture.md`, `state_partitioning_and_ownership.md`, `latency_throughput_ii.md`, `buffering_and_backpressure.md`, `feedback_dependency.md`, `resource_sharing_vs_duplication.md`, `parallelism_and_precomputation.md`, `architectural_timing_budget.md`, `microarchitecture_decision_record.md`
+
+Architecture 핵심 문서가 연결되었으며 후속 확장은 cross-chapter audit와 실제 review gap을 기준으로 결정한다.
 
 ### 03. Timing
 
@@ -98,6 +100,8 @@ Release 전 남은 공통 검증:
 
 ### 05. Area
 
+현재 기반: Area overview부터 physical footprint evidence까지 연결된 실무형 area guide
+
 - bit-width minimization
 - unused register/logic removal
 - state reduction
@@ -106,7 +110,9 @@ Release 전 남은 공통 검증:
 - counter/FSM encoding
 - area vs routing/congestion
 
-우선 작성: `bit_width_minimization.md`, `resource_sharing.md`, `reset_area_cost.md`, `fsm_counter_encoding.md`
+작성 완료: `overview.md`, `bit_width_minimization.md`, `unused_logic_and_state_reduction.md`, `reset_area_cost.md`, `fsm_counter_encoding.md`, `memory_and_register_array.md`, `physical_area_and_congestion.md`
+
+Reset cost의 functional architecture, sequencing와 RDC contract는 작성 완료된 **07. Reset** chapter로 연결한다.
 
 ### 06. Clock
 
@@ -121,15 +127,11 @@ Release 전 남은 공통 검증:
 
 ### 07. Reset
 
-- reset requirement and resetless datapath
-- synchronous vs asynchronous reset
-- assertion and deassertion
-- reset synchronizer and RDC
-- reset fanout
-- reset with gated/stopped clocks
-- independent domain reset
+현재 기반: Reset requirement와 state inventory부터 per-domain release, resetless datapath와 gated-clock sequencing까지 연결된 reset architecture guide
 
-우선 작성: `overview.md`, `sync_vs_async_reset.md`, `reset_deassertion.md`, `resetless_datapath.md`, `reset_with_clock_gating.md`
+작성 완료: `overview.md`, `sync_vs_async_reset.md`, `reset_deassertion.md`, `resetless_datapath.md`, `reset_with_clock_gating.md`
+
+다음 단계의 reset 연계는 작성 완료된 **09. Control Logic** chapter에서 FSM/control window, event priority, pulse/level과 illegal-state recovery로 확장했다.
 
 ### 08. CDC
 
@@ -146,15 +148,15 @@ Release 전 남은 공통 검증:
 
 ### 09. Control Logic
 
-- FSM architecture and encoding
-- counter/control window
-- clear/load/count priority
-- pulse vs level
-- simultaneous/back-to-back events
-- boundary, overflow and underflow
-- illegal state recovery
+- FSM functional architecture와 request/completion/response acceptance
+- priority/merge/reject/queue와 simultaneous/back-to-back events
+- same-domain pulse/level, re-arm와 sticky pending
+- counter boundary, overflow/underflow와 parameter contract
+- illegal encoding/protocol event containment과 recovery
 
-우선 작성: `fsm_design.md`, `priority_and_simultaneous_events.md`, `pulse_level_event.md`, `counter_boundary.md`, `illegal_state_recovery.md`
+작성 완료: `fsm_design.md`, `priority_and_simultaneous_events.md`, `pulse_level_event.md`, `counter_boundary.md`, `illegal_state_recovery.md`
+
+다음 단계: **10. Datapath** chapter의 arithmetic inference, overflow/saturation/rounding과 select structure를 확장한다.
 
 ### 10. Datapath
 

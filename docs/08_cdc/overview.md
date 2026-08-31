@@ -29,7 +29,7 @@ src_clk                             dst_clk
 known to source clock               sampled by a different edge set
 ```
 
-Clock뿐 아니라 asynchronous reset deassertion도 유사한 위험을 만들 수 있다. 이것은 Reset Domain Crossing(RDC) 관점에서 별도로 분석해야 하며, CDC synchronizer 하나로 모든 reset 문제가 해결되는 것은 아니다.
+Clock뿐 아니라 asynchronous reset deassertion도 유사한 위험을 만들 수 있다. 이것은 Reset Domain Crossing(RDC) 관점에서 별도로 분석해야 하며, CDC synchronizer 하나로 모든 reset 문제가 해결되는 것은 아니다. Per-domain release와 RDC sequencing은 [Reset Deassertion and RDC](../07_reset/reset_deassertion.md)를 따른다.
 
 ## 2. Metastability
 
@@ -289,6 +289,8 @@ CDC protocol은 정상 clock 동작뿐 아니라 reset과 clock stop에서 닫�
 
 가능하면 reset sequence를 system-level assumption으로만 숨기지 말고 interface contract와 assertion으로 표현한다. 한쪽 clock이 영구히 멈출 수 있다면 “eventual acknowledge” 같은 liveness property는 clock-availability assumption과 함께 작성해야 한다.
 
+Reset requirement, reset-done와 independent-domain rejoin의 상위 contract는 [Reset Architecture Overview](../07_reset/overview.md)가 담당한다. 이 문서는 CDC data/event protocol이 reset 비대칭에서 닫히는지를 검토한다.
+
 ## 10. CDC Analysis Tools
 
 Static CDC tool은 clock relationship과 structural pattern을 분석해 다음을 찾는 데 도움을 준다.
@@ -450,3 +452,4 @@ Reset asymmetry가 toggle mismatch, stale request와 handshake deadlock을 만�
 - [Pulse Crossing](pulse_crossing.md): stretch, toggle, handshake와 event delivery
 - [Multi-Bit CDC](multi_bit_cdc.md): coherency, Gray pointer와 async FIFO 선택
 - [Bundled Data](bundled_data.md): stable payload와 synchronized capture control contract
+- [Reset Deassertion and RDC](../07_reset/reset_deassertion.md): per-domain release와 reset-domain crossing

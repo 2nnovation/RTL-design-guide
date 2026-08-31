@@ -67,6 +67,16 @@ nav:
       - Combinational vs Sequential: 01_fundamentals/combinational_vs_sequential.md
       - Priority and MUX: 01_fundamentals/priority_and_mux.md
       - Width and Signedness: 01_fundamentals/width_and_signedness.md
+  - 02. Architecture & Microarchitecture:
+      - Requirement to Microarchitecture: 02_architecture/requirement_to_microarchitecture.md
+      - State Partitioning and Ownership: 02_architecture/state_partitioning_and_ownership.md
+      - Latency, Throughput and II: 02_architecture/latency_throughput_ii.md
+      - Buffering and Backpressure: 02_architecture/buffering_and_backpressure.md
+      - Feedback Dependency: 02_architecture/feedback_dependency.md
+      - Resource Sharing vs Duplication: 02_architecture/resource_sharing_vs_duplication.md
+      - Parallelism and Pre-computation: 02_architecture/parallelism_and_precomputation.md
+      - Architectural Timing Budget: 02_architecture/architectural_timing_budget.md
+      - Microarchitecture Decision Record: 02_architecture/microarchitecture_decision_record.md
   - 03. Timing:
       - Overview: 03_timing/overview.md
       - Critical Path: 03_timing/critical_path.md
@@ -77,11 +87,25 @@ nav:
       - Register Enable: 04_low_power/register_enable.md
       - Counter Optimization: 04_low_power/counter_optimization.md
       - Operand Isolation: 04_low_power/operand_isolation.md
+  - 05. Area:
+      - Overview: 05_area/overview.md
+      - Bit-Width Minimization: 05_area/bit_width_minimization.md
+      - Unused Logic and State Reduction: 05_area/unused_logic_and_state_reduction.md
+      - Reset Area Cost: 05_area/reset_area_cost.md
+      - FSM and Counter Encoding: 05_area/fsm_counter_encoding.md
+      - Memory and Register Array: 05_area/memory_and_register_array.md
+      - Physical Area and Congestion: 05_area/physical_area_and_congestion.md
   - 06. Clock & Clock Gating:
       - Overview: 06_clock/overview.md
       - Clock Gating: 06_clock/clock_gating.md
       - Inferred vs Explicit: 06_clock/inferred_vs_explicit.md
       - Root vs Function Clock: 06_clock/root_vs_function_clock.md
+  - 07. Reset:
+      - Overview: 07_reset/overview.md
+      - Synchronous vs Asynchronous Reset: 07_reset/sync_vs_async_reset.md
+      - Reset Deassertion and RDC: 07_reset/reset_deassertion.md
+      - Resetless Datapath: 07_reset/resetless_datapath.md
+      - Reset with Clock Gating: 07_reset/reset_with_clock_gating.md
   - 08. Clock Domain Crossing:
       - Overview: 08_cdc/overview.md
       - Metastability: 08_cdc/metastability.md
@@ -89,6 +113,12 @@ nav:
       - Pulse Crossing: 08_cdc/pulse_crossing.md
       - Multi-Bit CDC: 08_cdc/multi_bit_cdc.md
       - Bundled Data: 08_cdc/bundled_data.md
+  - 09. Control Logic:
+      - FSM Design: 09_control_logic/fsm_design.md
+      - Priority and Simultaneous Events: 09_control_logic/priority_and_simultaneous_events.md
+      - Pulse, Level, and Event: 09_control_logic/pulse_level_event.md
+      - Counter Boundary Design: 09_control_logic/counter_boundary.md
+      - Illegal State Recovery: 09_control_logic/illegal_state_recovery.md
   - 15. Design Review Checklist:
       - RTL Design Review Checklist: 15_checklist/rtl_design_review_checklist.md
 

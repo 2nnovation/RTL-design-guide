@@ -63,7 +63,7 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 !!! warning "MCP는 마지막 순간의 면제 수단이 아니다"
     Multi-Cycle Path는 hardware를 빠르게 만들지 않습니다. Architecture상 destination이 여러 cycle 뒤에만 값을 capture한다는 **이미 존재하는 functional requirement**가 있을 때 그 requirement를 STA에 표현합니다. 자세한 내용은 [Multi-Cycle Path](03_timing/multi_cycle_path.md)를 참고하세요.
 
-## V0.1 핵심 문서
+## 핵심 문서
 
 ### Foundation
 
@@ -74,6 +74,18 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [Priority and MUX](01_fundamentals/priority_and_mux.md): simultaneous event의 functional priority와 MUX·decode structure의 비용을 구분합니다.
 - [Width and Signedness](01_fundamentals/width_and_signedness.md): range, arithmetic growth, implicit conversion과 four-state simulation을 hardware cost에 연결합니다.
 - [Documentation Roadmap](00_introduction/roadmap.md): V0.1 이후 전체 Chapter의 책임과 작성 순서를 관리합니다.
+
+### Architecture & Microarchitecture
+
+- [Requirement to Microarchitecture](02_architecture/requirement_to_microarchitecture.md): 자연어 requirement를 acceptance/completion contract, register boundary, state ownership과 검증 evidence로 내립니다.
+- [State Partitioning and Ownership](02_architecture/state_partitioning_and_ownership.md): Persistent·transaction·protocol·derived state의 owner, lifetime, atomic update와 domain boundary를 설계합니다.
+- [Latency, Throughput and Initiation Interval](02_architecture/latency_throughput_ii.md): 세 metric을 cycle schedule, resource occupancy, backpressure와 실제 처리율에 연결합니다.
+- [Buffering and Backpressure](02_architecture/buffering_and_backpressure.md): Ready/valid storage, burst absorption, occupancy와 no-drop ordering contract를 다룹니다.
+- [Feedback Dependency](02_architecture/feedback_dependency.md): Recurrence의 dependency distance, state update latency와 achievable II를 legal schedule로 분석합니다.
+- [Resource Sharing vs Duplication](02_architecture/resource_sharing_vs_duplication.md): operator 수뿐 아니라 MUX, arbitration, fanout, locality, switching과 latency/II를 포함해 architecture 후보를 비교합니다.
+- [Parallelism and Pre-computation](02_architecture/parallelism_and_precomputation.md): Late select 앞뒤의 계산 배치와 speculative candidate의 PPA·commit 조건을 비교합니다.
+- [Architectural Timing Budget](02_architecture/architectural_timing_budget.md): Interface requirement를 stage work와 provisional budget으로 내리고 STA·physical evidence로 보정합니다.
+- [Microarchitecture Decision Record](02_architecture/microarchitecture_decision_record.md): 후보, 동일 비교 조건, evidence, owner와 change trigger를 재사용 가능한 기록으로 남깁니다.
 
 ### Timing
 
@@ -89,12 +101,30 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [Counter Optimization](04_low_power/counter_optimization.md): 사용하지 않는 구간의 counting을 멈추고 event priority와 PPA를 함께 검토합니다.
 - [Operand Isolation](04_low_power/operand_isolation.md): destination hold와 combinational activity suppression의 차이를 설명합니다.
 
+### Area
+
+- [Area Design & Optimization](05_area/overview.md): Mapped cells와 physical footprint를 구분하고 removal부터 physical feedback까지 최적화합니다.
+- [Bit-Width Minimization](05_area/bit_width_minimization.md): Range, arithmetic growth, parameter corner와 protocol bit를 보존하며 width를 줄입니다.
+- [Unused Logic and State Reduction](05_area/unused_logic_and_state_reduction.md): Observer와 authoritative state를 증명한 뒤 불필요한 logic, register와 derived state를 제거합니다.
+- [Reset Area Cost](05_area/reset_area_cost.md): Resettable state, tree와 memory inference 비용을 기능·test·RDC 계약과 함께 검토합니다.
+- [FSM and Counter Encoding](05_area/fsm_counter_encoding.md): State FF뿐 아니라 decode, fanout, illegal recovery와 physical mapping까지 encoding 후보를 비교합니다.
+- [Memory and Register Array](05_area/memory_and_register_array.md): Port, latency, collision, reset과 macro mapping을 포함해 storage architecture를 선택합니다.
+- [Physical Area and Congestion](05_area/physical_area_and_congestion.md): Synthesis cell area를 placement, routing, buffering와 실제 block footprint evidence로 연결합니다.
+
 ### Clock
 
 - [Clock Design Overview](06_clock/overview.md): clock architecture, gating, reset, test와 physical 책임의 전체 흐름을 설명합니다.
 - [Clock Gating](06_clock/clock_gating.md): raw gated clock의 위험, ICG, inferred/explicit gating, root/function clock과 self-deadlock을 다룹니다.
 - [Inferred vs Explicit Clock Gating](06_clock/inferred_vs_explicit.md): functional enable과 architecture clock boundary의 책임을 비교합니다.
 - [Root Clock vs Function Clock](06_clock/root_vs_function_clock.md): always-on partition, sleep/wake와 self-deadlock을 다룹니다.
+
+### Reset
+
+- [Reset Architecture Overview](07_reset/overview.md): Reset requirement, state inventory, domain architecture, completion과 verification flow를 연결합니다.
+- [Synchronous vs Asynchronous Reset](07_reset/sync_vs_async_reset.md): Active-edge와 async-control hardware 차이, clock stop, cell/DFT/RDC trade-off를 비교합니다.
+- [Reset Deassertion and RDC](07_reset/reset_deassertion.md): Async assertion과 controlled release, two-stage release latency와 independent reset domain을 다룹니다.
+- [Resetless Datapath](07_reset/resetless_datapath.md): Valid가 모든 observer를 mask할 때 payload reset을 생략할 수 있는 조건과 X 검증을 설명합니다.
+- [Reset with Clock Gating](07_reset/reset_with_clock_gating.md): Root controller, clock force-on, local release와 reset-done sequence를 설계합니다.
 
 ### CDC
 
@@ -104,6 +134,14 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [Pulse Crossing](08_cdc/pulse_crossing.md): stretch, toggle, handshake와 event-rate 조건을 비교합니다.
 - [Multi-Bit CDC](08_cdc/multi_bit_cdc.md): coherency, Gray pointer, FIFO와 reconvergence를 다룹니다.
 - [Bundled Data](08_cdc/bundled_data.md): payload stability와 synchronized control의 functional/physical contract를 설명합니다.
+
+### Control Logic
+
+- [FSM Design](09_control_logic/fsm_design.md): protocol phase, ownership, request/completion/response acceptance와 back-to-back refill을 설계합니다.
+- [Priority and Simultaneous Events](09_control_logic/priority_and_simultaneous_events.md): 동시 사건을 priority, merge, reject 또는 queue로 분류하고 acceptance를 검증합니다.
+- [Pulse, Level, and Event](09_control_logic/pulse_level_event.md): same-domain edge detection, re-arm, sticky pending과 no-loss 조건을 다룹니다.
+- [Counter Boundary Design](09_control_logic/counter_boundary.md): terminal level/event, wrap·saturate·block 정책과 parameter 경계를 정의합니다.
+- [Illegal State Recovery](09_control_logic/illegal_state_recovery.md): encoding/protocol fault의 side-effect containment, recovery와 escalation을 설명합니다.
 
 ### Review
 

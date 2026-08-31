@@ -72,6 +72,8 @@ Latency = 4 cycles, initiation interval = 1 cycle
 
 “빠르다”는 표현 대신 latency, throughput, clock frequency와 response deadline 중 무엇을 뜻하는지 명시한다.
 
+이 세 metric을 cycle schedule, backpressure와 resource occupancy에 적용하는 방법은 [Latency, Throughput and Initiation Interval](../02_architecture/latency_throughput_ii.md)을 참고한다.
+
 ## 4. Launch, Capture, Timing Path
 
 ### Launch

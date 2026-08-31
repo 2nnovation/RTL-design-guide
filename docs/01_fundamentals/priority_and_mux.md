@@ -197,7 +197,7 @@ Code review 전에 corner-case matrix를 만든다.
 - Assertion 또는 formal property가 assumption을 검증한다.
 - Requirement 변경 시 assumption owner와 review trigger가 있다.
 
-Counter window의 실제 사례는 [Counter Optimization](../04_low_power/counter_optimization.md)에서 다룬다.
+Counter window의 실제 사례는 [Counter Optimization](../04_low_power/counter_optimization.md)에서 다룬다. Request/acceptance와 동시 사건을 priority, merge, reject 또는 queue로 결정하는 방법은 [Priority and Simultaneous Events](../09_control_logic/priority_and_simultaneous_events.md)를 참고한다.
 
 ## 6. Priority vs Mutual Exclusivity
 
@@ -304,7 +304,7 @@ Default assignment는 latch를 피하는 데 도움을 주지만 illegal encodin
 
 ### Area를 줄이려고 모든 operator를 공유한다
 
-MUX, arbitration, fanout과 initiation interval 비용을 포함하지 않은 sharing은 timing과 throughput을 악화시킬 수 있다.
+MUX, arbitration, fanout과 initiation interval 비용을 포함하지 않은 sharing은 timing과 throughput을 악화시킬 수 있다. Architecture 수준의 판단은 [Resource Sharing vs Duplication](../02_architecture/resource_sharing_vs_duplication.md)을 참고한다.
 
 ## 12. Recommended Pattern
 

@@ -180,7 +180,7 @@ After:  operation A ─┐
         operation B ─┘
 ```
 
-Timing은 개선될 수 있지만 area와 switching이 늘 수 있다. 결과가 자주 사용되지 않으면 operand isolation도 함께 검토한다.
+Timing은 개선될 수 있지만 area와 switching이 늘 수 있다. 결과가 자주 사용되지 않으면 operand isolation도 함께 검토한다. Calculation placement와 speculative commit 조건은 [Parallelism and Pre-computation](../02_architecture/parallelism_and_precomputation.md)을 참고한다.
 
 ### Share or duplicate
 
