@@ -315,3 +315,4 @@ Latency가 달라졌으므로 cycle-by-cycle equivalence보다 latency mapping�
 - [Multi-Cycle Path](multi_cycle_path.md)
 - [Resetless Datapath](../07_reset/resetless_datapath.md)
 - [Low-Power RTL Design](../04_low_power/overview.md)
+- [Datapath Parallel Pre-computation](../10_datapath/parallel_precomputation.md)

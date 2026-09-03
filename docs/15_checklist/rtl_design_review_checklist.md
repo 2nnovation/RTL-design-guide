@@ -243,6 +243,8 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Unused branch의 wide datapath가 계속 toggle하지 않는가?
 - [ ] Boundary value, minimum/maximum, sign transition을 검증했는가?
 
+관련 상세 가이드: [Datapath Width and Signedness](../10_datapath/width_signedness.md), [Overflow, Saturation, and Rounding](../10_datapath/overflow_saturation_rounding.md), [Datapath MUX and Select](../10_datapath/mux_and_select.md), [Datapath Parallel Pre-computation](../10_datapath/parallel_precomputation.md)
+
 ## 13. Synthesis-Aware RTL
 
 - [ ] 작성한 `if`/`case`/ternary가 어떤 MUX/priority 구조가 될지 설명할 수 있는가?

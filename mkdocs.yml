@@ -119,6 +119,11 @@ nav:
       - Pulse, Level, and Event: 09_control_logic/pulse_level_event.md
       - Counter Boundary Design: 09_control_logic/counter_boundary.md
       - Illegal State Recovery: 09_control_logic/illegal_state_recovery.md
+  - 10. Datapath:
+      - Width and Signedness: 10_datapath/width_signedness.md
+      - Overflow, Saturation and Rounding: 10_datapath/overflow_saturation_rounding.md
+      - MUX and Select: 10_datapath/mux_and_select.md
+      - Parallel Pre-computation: 10_datapath/parallel_precomputation.md
   - 15. Design Review Checklist:
       - RTL Design Review Checklist: 15_checklist/rtl_design_review_checklist.md
 

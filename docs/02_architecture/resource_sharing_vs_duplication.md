@@ -431,3 +431,4 @@ Sharing 전후 cycle-by-cycle output이 다를 수 있으므로 transaction iden
 - [Think Hardware, Not Code](../01_fundamentals/think_hardware_not_code.md)
 - [Critical Path](../03_timing/critical_path.md)
 - [Operand Isolation](../04_low_power/operand_isolation.md)
+- [Datapath Parallel Pre-computation](../10_datapath/parallel_precomputation.md)

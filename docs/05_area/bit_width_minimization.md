@@ -451,5 +451,6 @@ Parameterized regression에는 legal minimum parameter와 representative large/n
 - [Buffering and Backpressure](../02_architecture/buffering_and_backpressure.md)
 - [Counter Optimization](../04_low_power/counter_optimization.md)
 - [Counter Boundary Design](../09_control_logic/counter_boundary.md)
+- [Datapath Width and Signedness](../10_datapath/width_signedness.md)
 - [Multi-Bit CDC](../08_cdc/multi_bit_cdc.md)
 - [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)

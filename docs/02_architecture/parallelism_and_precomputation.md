@@ -491,3 +491,4 @@ ap_no_spurious_commit:
 - [Pipeline Design](../03_timing/pipeline.md)
 - [Critical Path](../03_timing/critical_path.md)
 - [Operand Isolation](../04_low_power/operand_isolation.md)
+- [Datapath Parallel Pre-computation](../10_datapath/parallel_precomputation.md)

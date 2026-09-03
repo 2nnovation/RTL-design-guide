@@ -341,4 +341,4 @@ MUX, arbitration, fanout과 initiation interval 비용을 포함하지 않은 sh
 - [ ] Resource sharing의 MUX/control/throughput 비용을 포함했는가?
 - [ ] Synthesis mapping과 critical path가 예상 구조와 일치하는가?
 
-전체 검토에는 [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)를 함께 사용한다.
+Wide data selection의 invalid/one-hot contract와 physical select topology는 [Datapath MUX and Select](../10_datapath/mux_and_select.md)를 참고한다. 전체 검토에는 [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)를 함께 사용한다.

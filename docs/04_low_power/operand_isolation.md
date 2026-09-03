@@ -263,3 +263,5 @@ Power verification에서는 isolation output과 expensive block internal activit
 - [Register Enable](register_enable.md)
 - [Counter Optimization](counter_optimization.md)
 - [Pipeline Design](../03_timing/pipeline.md)
+- [Datapath MUX and Select](../10_datapath/mux_and_select.md)
+- [Datapath Parallel Pre-computation](../10_datapath/parallel_precomputation.md)

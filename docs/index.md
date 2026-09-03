@@ -143,6 +143,13 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [Counter Boundary Design](09_control_logic/counter_boundary.md): terminal level/event, wrap·saturate·block 정책과 parameter 경계를 정의합니다.
 - [Illegal State Recovery](09_control_logic/illegal_state_recovery.md): encoding/protocol fault의 side-effect containment, recovery와 escalation을 설명합니다.
 
+### Datapath
+
+- [Datapath Width and Signedness](10_datapath/width_signedness.md): numeric representation, operand normalization, full-precision arithmetic와 explicit resize를 구현합니다.
+- [Overflow, Saturation, and Rounding](10_datapath/overflow_saturation_rounding.md): unsigned/signed overflow, saturation과 fixed-point rounding의 bit-exact 정책을 다룹니다.
+- [Datapath MUX and Select](10_datapath/mux_and_select.md): wide select topology, invalid/one-hot contract, late select와 routing 비용을 검토합니다.
+- [Datapath Parallel Pre-computation](10_datapath/parallel_precomputation.md): registered candidates와 select/valid alignment, speculative ownership과 commit point를 설계합니다.
+
 ### Review
 
 - [RTL Design Review Checklist](15_checklist/rtl_design_review_checklist.md): Architecture부터 Verification까지 바로 사용할 수 있는 질문을 제공합니다.

@@ -156,7 +156,7 @@ Reset cost의 functional architecture, sequencing와 RDC contract는 작성 완�
 
 작성 완료: `fsm_design.md`, `priority_and_simultaneous_events.md`, `pulse_level_event.md`, `counter_boundary.md`, `illegal_state_recovery.md`
 
-다음 단계: **10. Datapath** chapter의 arithmetic inference, overflow/saturation/rounding과 select structure를 확장한다.
+Control phase에서 생성한 mode/select/valid는 작성 완료된 **10. Datapath** chapter의 arithmetic, resize와 speculative commit contract로 이어진다.
 
 ### 10. Datapath
 
@@ -167,7 +167,9 @@ Reset cost의 functional architecture, sequencing와 RDC contract는 작성 완�
 - parallelization and pre-computation
 - constant optimization
 
-우선 작성: `width_signedness.md`, `overflow_saturation_rounding.md`, `mux_and_select.md`, `parallel_precomputation.md`
+작성 완료: `width_signedness.md`, `overflow_saturation_rounding.md`, `mux_and_select.md`, `parallel_precomputation.md`
+
+다음 단계: **11. Synthesis-Aware RTL** chapter에서 RTL construct와 실제 mapping/report feedback을 확장한다.
 
 ### 11. Synthesis-Aware RTL
 
