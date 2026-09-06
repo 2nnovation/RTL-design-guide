@@ -71,14 +71,16 @@ Ready가 없는 interface라면 `in_valid`이 asserted된 모든 edge를 accept�
 ### Cycle contract 예
 
 ```text
-edge              E0       E1       E2       E3       E4
-input A accept     A
-input B accept              B
-input state        A        B
-sum state                   A        B
-output valid                         A        B
+edge                       E0       E1       E2       E3       E4
+input A accept              A
+input B accept                       B
+input state, NBA 후          A        B
+sum state, NBA 후                     A        B
+output register, NBA 후                         A        B
+downstream observation                                   A        B
 
-Contract: A는 E0에서 accept되고 E2에 output-valid로 관찰된다.
+Contract: A는 E0에서 accept되고 E2 NBA 뒤 producer output에 publish되며,
+          E3에 downstream sequential logic이 output-valid/data를 관찰·capture한다.
           Stall이 없을 때 매 edge 새 input을 accept한다.
 ```
 
@@ -141,14 +143,14 @@ State는 “always_ff 안에 있는 signal 목록”보다 넓은 개념이다. 
 
 이 표가 RTL event priority, assertion과 review의 공통 source가 된다. Priority와 MUX 자체의 canonical 설명은 [Priority and MUX](../01_fundamentals/priority_and_mux.md)를 참고한다.
 
-## 7. Worked Example: 명시적인 2-Cycle Contract
+## 7. Worked Example: 명시적인 3-Cycle Interface Contract
 
 다음 generic requirement를 가정한다.
 
 - 두 unsigned 8-bit input과 unsigned 8-bit limit를 accept한다.
 - 9-bit full-precision sum과 `sum > limit` flag를 반환한다.
 - Stall 없는 interface이며 매 cycle input을 accept할 수 있다.
-- Accept 뒤 2 cycle에 output이 valid하다.
+- Accept 뒤 3 cycle에 downstream sequential consumer가 matching output valid/data를 관찰·capture한다.
 - Reset은 in-flight transaction을 폐기한다. Invalid payload 값은 관찰하지 않는다.
 
 ### Hardware structure
@@ -156,12 +158,13 @@ State는 “always_ff 안에 있는 signal 목록”보다 넓은 개념이다. 
 ```text
                           transaction ownership begins
                                       │
-in_a/in_b/limit ──> [S0 input capture] ──> [S1 add + limit] ──> [S2 output capture]
-in_valid          ──> [valid input]      ──> [valid sum]      ──> out_valid
+in_a/in_b/limit ──> [S0 input capture] ──> [S1 add + limit] ──> [S2 output register] ──> consumer
+in_valid          ──> [valid input]      ──> [valid sum]      ──> out_valid            ──> capture
 
 accept E0: S0 captures operands/limit
 edge   E1: S1 captures 9-bit sum and aligned limit
-edge   E2: S2 captures output payload/valid
+edge   E2: S2 publishes output payload/valid after NBA
+edge   E3: downstream sequential logic observes/captures that output
 ```
 
 ### Generic SystemVerilog
@@ -223,7 +226,7 @@ Accept edge에는 operand와 `limit`를 먼저 capture한다. 다음 edge에는 
 
 Reset은 `valid_input_q`, `valid_sum_q`와 `out_valid`를 우선적으로 clear해 모든 in-flight transaction을 폐기한다. Operand, intermediate와 output payload register를 reset하지 않은 이유는 각 corresponding valid가 0일 때 그 값이 의미 없고 consumer가 관찰하지 않는다는 contract 때문이다. Known invalid payload가 필요한 safety/test 환경이라면 이 선택을 다시 검토한다.
 
-이제 A는 E0에서 input state가 되고, E1에서 sum state가 되며, E2에서 output payload와 valid가 된다. 따라서 위 cycle table과 `LATENCY=2` contract가 RTL register boundary에 직접 대응한다. 실제 프로젝트는 edge 명칭과 assertion monitor의 sampling convention까지 interface specification에 고정해야 한다.
+이제 A는 E0에서 input state가 되고, E1에서 sum state가 되며, E2 NBA 뒤 output register에 publish된다. 같은 E2 edge의 downstream FF와 concurrent SVA는 이전 값을 sampling했으므로 A를 처음 synchronous하게 관찰·capture하는 edge는 E3다. 따라서 위 cycle table과 `LATENCY=3` contract가 RTL register boundary와 consumer-visible behavior에 대응한다.
 
 Ready/backpressure가 있는 interface에는 이 단순 free-running 구조를 그대로 적용하면 안 된다. Downstream stall 시 output payload/valid hold와 upstream ready propagation 또는 elastic storage가 필요하다.
 
@@ -297,7 +300,7 @@ Slack, area와 power가 좋아도 잘못된 transaction schedule을 구현했다
 Fixed-latency, stall 없는 block이라면 accept와 output-valid 관계를 assertion으로 표현한다.
 
 ```systemverilog
-parameter int LATENCY = 2;
+parameter int LATENCY = 3;
 
 ap_accept_to_valid:
     assert property (@(posedge clk) disable iff (!rst_n)

@@ -110,7 +110,7 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 | 0 | 1 | 1 | Explicit priority | Test / assertion |
 | 1 | 1 | 1 | Explicit priority | Test / assertion |
 
-관련 상세 가이드: [FSM Design](../09_control_logic/fsm_design.md), [Priority and Simultaneous Events](../09_control_logic/priority_and_simultaneous_events.md), [Pulse, Level, and Event](../09_control_logic/pulse_level_event.md), [Counter Boundary Design](../09_control_logic/counter_boundary.md), [Illegal State Recovery](../09_control_logic/illegal_state_recovery.md)
+관련 상세 가이드: [FSM Design](../09_control_logic/fsm_design.md), [Priority and Simultaneous Events](../09_control_logic/priority_and_simultaneous_events.md), [Pulse, Level, and Event](../09_control_logic/pulse_level_event.md), [Counter Boundary Design](../09_control_logic/counter_boundary.md), [Illegal State Recovery](../09_control_logic/illegal_state_recovery.md), [Deep Priority Chain](../14_anti_patterns/deep_priority_chain.md), [Large Decode Without Timing Review](../14_anti_patterns/large_decode_without_timing_review.md)
 
 ## 6. Timing
 
@@ -142,7 +142,7 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Generated clock, clock ratio, mode 변경 시에도 exception이 유효한가?
 - [ ] RTL 변경 시 exception assumption을 깨뜨리는지 검출할 assertion/review owner가 있는가?
 
-관련 문서: [Timing Design & Optimization](../03_timing/overview.md), [Multi-Cycle Path](../03_timing/multi_cycle_path.md)
+관련 문서: [Timing Design & Optimization](../03_timing/overview.md), [Multi-Cycle Path](../03_timing/multi_cycle_path.md), [MCP Used to Hide Timing](../14_anti_patterns/mcp_used_to_hide_timing.md), [Excessive Pipeline](../14_anti_patterns/excessive_pipeline.md)
 
 ## 7. Low Power
 
@@ -163,7 +163,7 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Representative workload와 idle ratio로 activity를 비교했는가?
 - [ ] Power 변경 후 area와 timing도 함께 비교했는가?
 
-관련 문서: [Low-Power Overview](../04_low_power/overview.md), [Counter Optimization](../04_low_power/counter_optimization.md), [Clock Gating](../06_clock/clock_gating.md)
+관련 문서: [Low-Power Overview](../04_low_power/overview.md), [Counter Optimization](../04_low_power/counter_optimization.md), [Clock Gating](../06_clock/clock_gating.md), [Free-Running Unused Counter](../14_anti_patterns/free_running_unused_counter.md), [Unnecessary Clear](../14_anti_patterns/unnecessary_clear.md), [Enable Everywhere](../14_anti_patterns/enable_everywhere.md)
 
 ## 8. Area
 
@@ -177,6 +177,8 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Timing을 위한 duplication이 실제 critical path/locality 개선으로 이어졌는가?
 - [ ] Pipeline/retiming으로 늘어난 FF와 clock load를 계산했는가?
 - [ ] Synthesis area report에서 예상하지 못한 operator, MUX, buffer, reset cell을 확인했는가?
+
+관련 문서: [Bit-Width Minimization](../05_area/bit_width_minimization.md), [Reset Area Cost](../05_area/reset_area_cost.md), [Oversized Register](../14_anti_patterns/oversized_register.md)
 
 ## 9. Clock & Clock Gating
 
@@ -194,7 +196,7 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] 작은 FF group에 ICG를 추가하는 overhead가 절감보다 크지 않은가?
 - [ ] Clock gating 검증에 enable transition, stop/start, test mode, reset overlap이 포함되는가?
 
-관련 문서: [Clock Gating](../06_clock/clock_gating.md)
+관련 문서: [Clock Gating](../06_clock/clock_gating.md), [Raw Clock Gating](../14_anti_patterns/raw_clock_gating.md)
 
 ## 10. Reset
 
@@ -208,7 +210,7 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Partial reset domain 사이의 stale/invalid data 사용을 막는가?
 - [ ] Reset과 request/clear/capture가 겹칠 때 priority를 검증했는가?
 
-관련 문서: [Reset Architecture Overview](../07_reset/overview.md), [Synchronous vs Asynchronous Reset](../07_reset/sync_vs_async_reset.md), [Reset Deassertion and RDC](../07_reset/reset_deassertion.md), [Resetless Datapath](../07_reset/resetless_datapath.md), [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md)
+관련 문서: [Reset Architecture Overview](../07_reset/overview.md), [Synchronous vs Asynchronous Reset](../07_reset/sync_vs_async_reset.md), [Reset Deassertion and RDC](../07_reset/reset_deassertion.md), [Resetless Datapath](../07_reset/resetless_datapath.md), [Reset with Clock Gating](../07_reset/reset_with_clock_gating.md), [Reset Everything](../14_anti_patterns/reset_everything.md)
 
 ## 11. Clock Domain Crossing
 
@@ -229,7 +231,7 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] CDC tool이 구조를 recognize하고, violation/waiver에 functional justification과 owner가 있는가?
 - [ ] Simulation만으로 metastability 안전성을 주장하지 않는가?
 
-관련 문서: [CDC Overview](../08_cdc/overview.md), [2FF Synchronizer](../08_cdc/synchronizer.md)
+관련 문서: [CDC Overview](../08_cdc/overview.md), [2FF Synchronizer](../08_cdc/synchronizer.md), [Independent 2FF Bus](../14_anti_patterns/independent_2ff_bus.md)
 
 ## 12. Datapath & Numeric Behavior
 
@@ -255,6 +257,15 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Synthesis warning, inferred latch, undriven/unreachable logic을 검토했는가?
 - [ ] 예상한 register, MUX, operator 수와 실제 report/netlist가 일치하는가?
 - [ ] Tool/library/setting에 의존하는 결과를 RTL 규칙처럼 단정하지 않는가?
+- [ ] Top/parameter/define/filelist와 RTL·tool·library·constraint provenance가 같은 run을 가리키는가?
+- [ ] Generic object 수, sequential bit 수와 mapped cell 수를 구분했는가?
+- [ ] 명세상 enable과 무관해야 하는 clear/reset 동작을 actual CE/ICG grouping이 보존하는가?
+- [ ] Parameter/tie-off와 runtime config/STA case analysis/formal assumption을 구분했는가?
+- [ ] Unexpected removal이 output 누락이나 wrong configuration 때문이 아닌가?
+- [ ] Clock/I/O coverage, unconstrained endpoints, empty collections와 broad exceptions를 확인했는가?
+- [ ] Area/power 비교에서 physical stage, activity coverage/defaults와 clock·macro 포함 범위를 맞췄는가?
+
+관련 상세 가이드: [RTL to Hardware Mapping](../11_synthesis/rtl_to_hardware_mapping.md), [Enable and MUX Inference](../11_synthesis/enable_and_mux_inference.md), [Constant and Dead Logic](../11_synthesis/constant_dead_logic.md), [Reading Synthesis Reports](../11_synthesis/read_synthesis_reports.md), [Ignoring Synthesis Result and Fanout](../14_anti_patterns/ignoring_synthesis_result_and_fanout.md)
 
 ## 14. Physical-Aware Review
 
@@ -266,6 +277,21 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Clock tree load와 gated-clock region의 물리적 범위를 고려했는가?
 - [ ] Synthesis timing만이 아니라 post-place/post-route feedback을 반영했는가?
 - [ ] 한 path를 고친 뒤 다른 corner/mode/path group이 새 bottleneck이 되지 않았는가?
+- [ ] Fanout count뿐 아니라 pin/wire capacitance, low-fanout long wire와 branch별 delay를 확인했는가?
+- [ ] Logical hierarchy나 같은 RHS가 actual physical replica와 placement를 보장한다고 가정하지 않는가?
+- [ ] Combinational duplication과 registered replica의 state/latency/reset/enable 계약을 구분했는가?
+- [ ] Synchronizer first stage나 asynchronous control을 fanout 감소 목적으로 독립 복제하지 않는가?
+- [ ] Buffering/upsizing/replication 후 source load, max cap/slew, hold와 clock/reset/test 비용을 재검토했는가?
+- [ ] Routing demand/capacity를 region/layer/pin access로 보고 global overflow와 detailed-route DRC를 구분했는가?
+- [ ] Local result 전달의 기능 동일성과 실제 placement/route 개선을 별도로 확인했는가?
+- [ ] Width 축소와 serialization을 구분하고 arbiter/ready/valid/ordering/II 비용을 포함했는가?
+- [ ] Logical hierarchy, optimization boundary와 physical partition을 구분했는가?
+- [ ] Interface cut의 data/control/domain과 port·macro affinity를 함께 검토했는가?
+- [ ] Combinational wrapper와 register 추가의 edge/NBA/latency 차이를 반영했는가?
+- [ ] Synthesis→place→CTS→route 차이를 coverage/seed 변동과 구분하고 새 critical path·hold를 추적했는가?
+- [ ] Physical/constraint/domain 변경의 owner·승인 범위와 regression이 기록됐는가?
+
+관련 상세 가이드: [Fanout and Locality](../12_physical_aware/fanout_and_locality.md), [Congestion-Aware Structure](../12_physical_aware/congestion_aware_structure.md), [Hierarchy and Placement](../12_physical_aware/hierarchy_and_placement.md), [RTL to Post-Route Feedback](../12_physical_aware/rtl_to_post_route_feedback.md), [Physical Area and Congestion](../05_area/physical_area_and_congestion.md)
 
 ## 15. Verification & Robustness
 
@@ -281,6 +307,17 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Constraint assumption을 깨는 negative test 또는 property가 있는가?
 - [ ] Parameter와 configuration 조합별 coverage가 있는가?
 - [ ] Optimization 전후 functional/equivalence 비교가 필요한가?
+- [ ] Assumption, DUT guarantee와 cover intent의 책임을 구분하고 합법적인 collision을 제외하지 않았는가?
+- [ ] Assertion의 sampling/NBA, reset abort와 초기 history가 실제 cycle contract에 맞는가?
+- [ ] Matrix의 precondition·acceptance·expected edge가 checker와 연결되고, 도달 coverage와 correctness를 구분하는가?
+- [ ] Vacuity, 미도달 cover, bounded pass, proof, unknown과 미실행을 구분하며 checker 활성화·검출 능력을 확인했는가?
+- [ ] Lint·simulation·formal·equivalence의 top/configuration/초기 상태/X/blackbox 전제가 기록되어 있는가?
+- [ ] Equivalence pass와 reference의 specification correctness를 구분하고 모든 partition·compare point를 확인했는가?
+- [ ] Reset·flush·mode update마다 drain/abort/preserve 정책과 acceptance·commit edge가 정의되어 있는가?
+- [ ] Scoreboard가 accepted transaction의 mode tag와 reset epoch를 추적하고 late result를 구분하는가?
+- [ ] Clock stop 전에 필요한 drain/commit이 완료되며 resume 첫 acceptance cycle이 검증되는가?
+
+관련 상세 가이드: [Assertion-Driven RTL](../13_verification/assertion_driven_rtl.md), [Corner-Case Matrix](../13_verification/corner_case_matrix.md), [Lint, Formal, and Equivalence](../13_verification/lint_formal_equivalence.md), [Reset and Mode Transition Verification](../13_verification/reset_mode_transition_verification.md)
 
 ### 권장 invariant 예시
 
@@ -301,9 +338,12 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [ ] Clock, generated clock, uncertainty, I/O delay가 현재 integration과 일치하는가?
 - [ ] MCP/false-path/CDC waiver에 이유, 정확한 범위, 검증 evidence, owner가 있는가?
 - [ ] Hidden assumption이 SDC에만 존재하지 않는가?
+- [ ] Constraint의 mode/lifecycle·resolved object set·검증 owner를 기록하고 wildcard의 empty/overmatch/동일 개수 오대상을 검출하는가?
 - [ ] RTL 변경 시 관련 constraint/assertion/document를 찾을 수 있는가?
 - [ ] 예제, 이름, 수치, diagram이 public repository에 공개 가능한 generic material인가?
 - [ ] 특정 vendor/tool behavior를 근거 없이 보편적인 사실로 표현하지 않는가?
+
+관련 상세 가이드: [Assumption Hidden Only in SDC](../14_anti_patterns/assumption_hidden_only_in_sdc.md)
 
 ## 17. Review Exit Criteria
 

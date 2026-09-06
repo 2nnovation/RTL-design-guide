@@ -580,6 +580,8 @@ flowchart TD
 
 ## 관련 문서
 
+- [Unnecessary Clear](../14_anti_patterns/unnecessary_clear.md): 정상 동작 중 clear의 observer, priority와 PPA 비용
+- [Free-Running Unused Counter](../14_anti_patterns/free_running_unused_counter.md): live value window와 Remove→Disable review
 - [Low-Power RTL Design](overview.md): switching activity, register enable과 operand isolation의 전체 관점
 - [Clock Gating](../06_clock/clock_gating.md): enable과 실제 clock activity 제어의 차이
 - [Counter Boundary Design](../09_control_logic/counter_boundary.md): terminal, wrap/saturate/block, overflow와 underflow의 기능 계약

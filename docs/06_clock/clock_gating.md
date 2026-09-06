@@ -578,6 +578,7 @@ Measure post-synthesis and physical PPA
 
 ## 관련 문서
 
+- [Raw Clock Gating](../14_anti_patterns/raw_clock_gating.md): 조합 clock 생성의 실패 조건, 예외와 review evidence
 - [Clock Design Overview](overview.md): clock architecture의 전체 decision flow
 - [Inferred vs Explicit Clock Gating](inferred_vs_explicit.md): insertion 책임과 fine/coarse-grain 선택
 - [Root Clock vs Function Clock](root_vs_function_clock.md): always-on partition과 sleep/wake protocol

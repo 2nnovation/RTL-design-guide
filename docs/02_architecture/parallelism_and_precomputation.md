@@ -96,23 +96,25 @@ Select가 state decode, arbitration, tag lookup 또는 long control fanout 뒤�
 
 반대로 select가 일찍 안정되고 operands가 늦다면 parallelization의 timing 이득이 작을 수 있다. Critical path report에서 data arrival와 select arrival를 분리해 본다.
 
-## 4. 동일한 1-Cycle Contract 비교
+## 4. 동일한 2-Cycle Interface Contract 비교
 
 다음 두 RTL 후보는 같은 interface contract를 구현한다.
 
-- E0: `in_valid` transaction의 operands와 `sel` capture
-- E1: 선택된 unsigned sum과 `out_valid` capture
+- E0: `in_valid` transaction의 operands와 `sel`을 input register에 capture
+- E1 NBA 뒤: 선택된 unsigned sum과 `out_valid`을 output register에서 publish
+- E2: downstream sequential consumer 또는 concurrent SVA가 matching output을 처음 관찰·capture
 - `sel == 0`: `{1'b0, a} + {1'b0, b}`
 - `sel == 1`: `{1'b0, c} + {1'b0, d}`
-- Latency: accept E0 → output valid E1
+- Interface latency: accept E0 → synchronous output observation E2, 2 cycle
 - II: 1, stall 없는 pipeline
 - Reset은 valid state를 clear하고 invalid payload는 관찰하지 않음
 
 ```text
-edge                    E0          E1          E2
-accepted transaction     A           B
-captured input/select    A           B
-output result/valid                  A           B
+edge                           E0          E1          E2          E3
+accepted transaction            A           B
+input register, NBA 후          A           B
+output register, NBA 후                     A           B
+downstream observation                                  A           B
 ```
 
 ### 4.1 Select then calculate: shared-path candidate
@@ -227,7 +229,7 @@ module parallel_add_then_select (
 endmodule
 ```
 
-두 후보 모두 operands를 9-bit로 확장한 뒤 더해 carry를 보존하고, signedness는 unsigned로 동일하다. `sel_input_q`는 operands와 E0에서 capture되어 transaction A의 select가 A의 result에 적용된다. Nonblocking assignment 때문에 E1 output은 E0에 capture한 input state를 읽는다.
+두 후보 모두 operands를 9-bit로 확장한 뒤 더해 carry를 보존하고, signedness는 unsigned로 동일하다. `sel_input_q`는 operands와 E0에서 capture되어 transaction A의 select가 A의 result에 적용된다. Nonblocking assignment 때문에 output register는 E1에서 E0에 capture한 input state를 읽어 NBA 뒤 A를 publish한다. 같은 E1 edge의 downstream FF와 concurrent SVA는 이전 값을 sampling했으므로 A의 첫 synchronous observation/capture edge는 E2다.
 
 코드 모양만으로 adder 개수를 보장하지 않는다. Tool은 function, hierarchy, constraints와 optimization settings에 따라 공유 또는 복제를 선택할 수 있다. 이 문서의 구조는 architecture 후보이며 실제 mapping을 report/netlist로 확인한다.
 
@@ -409,7 +411,7 @@ Tool과 constraints에 따라 factoring, sharing 또는 replication이 달라질
 
 ### Functional equivalence
 
-두 후보에 동일한 accepted transaction stream을 넣고 같은 E1 output-valid slot에서 result를 비교한다.
+두 후보에 동일한 accepted transaction stream을 넣고 같은 E2 synchronous output-observation slot에서 result를 비교한다.
 
 ```text
 expected = sel ? (zero_extend(c) + zero_extend(d))
@@ -428,9 +430,9 @@ expected = sel ? (zero_extend(c) + zero_extend(d))
 ### Example properties
 
 ```systemverilog
-ap_one_cycle_valid:
+ap_two_cycle_valid:
     assert property (@(posedge clk) disable iff (!rst_n)
-        in_valid |-> ##1 out_valid
+        in_valid |-> ##2 out_valid
     );
 
 ap_no_spurious_commit:

@@ -283,7 +283,9 @@ Optimization 전후 invalid 구간 값이 달라도 valid observation point에�
 
 ## 관련 문서
 
+- [Enable Everywhere](../14_anti_patterns/enable_everywhere.md): fine-grain enable의 손익과 implementation evidence
 - [Low-Power RTL Design](overview.md)
 - [Counter Optimization](counter_optimization.md)
 - [Operand Isolation](operand_isolation.md)
 - [Clock Gating](../06_clock/clock_gating.md)
+- [Enable and MUX Inference](../11_synthesis/enable_and_mux_inference.md)

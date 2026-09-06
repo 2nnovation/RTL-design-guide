@@ -43,6 +43,8 @@ complete := out_valid && out_ready sampled at rising edge
 
 Downstream backpressure 때문에 둘 사이가 벌어질 수 있다. Block 내부 계산 latency와 end-to-end queueing latency를 같은 숫자로 섞지 않는다.
 
+이 문서의 `result available at E0 + L`은 [canonical convention](../01_fundamentals/terminology.md#3-latency-throughput-initiation-interval)에 따라 downstream sequential consumer나 concurrent SVA가 해당 edge의 preponed sample에서 matching valid/data를 관찰할 수 있다는 뜻이다. Producer output register가 바로 전 edge의 NBA 뒤 값을 publish한 시점과 이 synchronous observation edge를 구분한다.
+
 ### Fixed latency contract
 
 ```text
@@ -155,7 +157,9 @@ Elastic pipeline의 downstream stall이 upstream ready를 낮추면 순간적인
 다음 block은 네 개의 unsigned 8-bit 값을 하나의 10-bit adder/accumulator 경로로 합산한다.
 
 - Accept 조건: `in_valid && in_ready`
-- Accept edge를 `E0`라고 할 때 output valid: `E3`
+- Accept edge를 `E0`라고 할 때 output register publication: E3 NBA 뒤
+- Matching output valid/data의 첫 synchronous observation/capture: E4
+- Interface latency: 4 cycle
 - 현재 구현의 II: 4 cycle
 - Reset 우선순위: reset이 busy transaction과 output valid를 폐기
 - Busy 중 input은 accept하지 않음
@@ -180,7 +184,8 @@ module iterative_sum4 (
     logic [7:0] x2_q;
     logic [7:0] x3_q;
 
-    assign in_ready = !busy_q;
+    // Reset 중에는 upstream에 acceptance를 광고하지 않는다.
+    assign in_ready = rst_n && !busy_q;
 
     // Event priority: reset > busy iteration > idle accept/hold.
     always_ff @(posedge clk or negedge rst_n) begin
@@ -223,7 +228,11 @@ endmodule
 
 네 개의 8-bit unsigned 값을 더한 최대값은 1020이므로 10-bit output이 필요하다. 각 operand를 10-bit로 명시적으로 zero-extend하여 expression width를 분명히 했다.
 
-Completion edge 직전에는 `busy_q == 1`이므로 새 input을 같은 edge에 accept하지 않는다. Completion과 accept를 겹치려면 `in_ready` 정의, operand capture와 busy update priority를 바꾸고 동시 event를 검증해야 한다. 단순히 `in_ready`를 일찍 올리면 진행 중 state가 덮어써질 수 있다.
+E0에서 request를 accept한 뒤 E1과 E2에서 중간 덧셈을 수행하고, E3 edge의 NBA 뒤 `out_sum`과 `out_valid`을 publish한다. E3의 downstream FF와 concurrent SVA는 이미 이전 값을 sampling했으므로 matching output을 처음 synchronous하게 관찰·capture하는 edge는 E4다. 따라서 interface latency는 4 cycle이고 resource가 E3 completion edge에 새 request를 함께 받지 않으므로 II도 4다.
+
+Reset assertion 중 `in_ready`를 0으로 강제하지 않으면 upstream은 request가 accept됐다고 판단하지만 sequential reset branch가 그 request를 폐기할 수 있다. 이 예의 reset contract는 “reset 중 acceptance 없음”이며, reset deassertion 정책은 integration의 reset synchronization rule과 함께 결정한다.
+
+E3 output-register publication edge 직전에는 `busy_q == 1`이므로 새 input을 E3에 accept하지 않는다. E3 NBA 뒤에는 `busy_q == 0`과 `out_valid == 1`이 되어, E4에서 downstream이 A를 synchronous하게 소비하는 동시에 upstream이 B를 accept할 수 있다. Result capture와 새 input refill을 E3에 겹치려면 `in_ready` 정의, operand capture와 busy update priority를 바꾸고 동시 event를 검증해야 한다. 단순히 `in_ready`를 일찍 올리면 진행 중 state가 덮어써질 수 있다.
 
 ## 7. 다른 Architecture 후보와 비교
 
@@ -336,12 +345,17 @@ assign accept = in_valid && in_ready;
 
 ap_fixed_latency:
     assert property (@(posedge clk) disable iff (!rst_n)
-        accept |-> ##3 out_valid
+        accept |-> ##4 out_valid
     );
 
 ap_no_accept_while_busy:
     assert property (@(posedge clk) disable iff (!rst_n)
         busy_q |-> !in_ready
+    );
+
+ap_no_ready_or_accept_during_reset:
+    assert property (@(posedge clk)
+        !rst_n |-> (!in_ready && !accept)
     );
 ```
 

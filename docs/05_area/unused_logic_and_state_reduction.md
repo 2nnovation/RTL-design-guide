@@ -4,7 +4,7 @@ Unused hardware는 source에서 읽히지 않는 signal만 뜻하지 않는다. 
 
 > Dead code elimination을 tool에 맡기는 것과 architecture에서 불필요한 state를 제거하는 것은 다르다. Observer와 reachability proof를 먼저 만든다.
 
-State lifetime과 owner는 [State Partitioning and Ownership](../02_architecture/state_partitioning_and_ownership.md), 전체 area 순서는 [Area Design & Optimization](overview.md)이 담당한다. 미래 Synthesis-Aware chapter는 constant propagation과 mapped dead-logic report를 더 깊게 다룰 예정이다.
+State lifetime과 owner는 [State Partitioning and Ownership](../02_architecture/state_partitioning_and_ownership.md), 전체 area 순서는 [Area Design & Optimization](overview.md)이 담당한다. Constant propagation과 mapped dead-logic report의 해석은 [Constant and Dead Logic](../11_synthesis/constant_dead_logic.md)을 참고한다.
 
 ## 1. Observer와 Cone of Influence
 

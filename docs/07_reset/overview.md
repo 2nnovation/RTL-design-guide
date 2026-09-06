@@ -360,10 +360,12 @@ Clocked SVA는 preponed sampling과 NBA update 때문에 “같은 edge의 reset
 
 ## 관련 문서
 
+- [Reset Everything](../14_anti_patterns/reset_everything.md): state별 reset 근거, valid guard와 예외 검토
 - [Synchronous vs Asynchronous Reset](sync_vs_async_reset.md)
 - [Reset Deassertion and RDC](reset_deassertion.md)
 - [Resetless Datapath](resetless_datapath.md)
 - [Reset with Clock Gating](reset_with_clock_gating.md)
+- [Reset and Mode Transition Verification](../13_verification/reset_mode_transition_verification.md)
 - [Reset Area Cost](../05_area/reset_area_cost.md)
 - [State Partitioning and Ownership](../02_architecture/state_partitioning_and_ownership.md)
 - [Clock Design Overview](../06_clock/overview.md)

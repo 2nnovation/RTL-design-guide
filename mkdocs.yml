@@ -124,6 +124,35 @@ nav:
       - Overflow, Saturation and Rounding: 10_datapath/overflow_saturation_rounding.md
       - MUX and Select: 10_datapath/mux_and_select.md
       - Parallel Pre-computation: 10_datapath/parallel_precomputation.md
+  - 11. Synthesis-Aware RTL:
+      - RTL to Hardware Mapping: 11_synthesis/rtl_to_hardware_mapping.md
+      - Enable and MUX Inference: 11_synthesis/enable_and_mux_inference.md
+      - Constant and Dead Logic: 11_synthesis/constant_dead_logic.md
+      - Reading Synthesis Reports: 11_synthesis/read_synthesis_reports.md
+  - 12. Physical-Aware RTL:
+      - Fanout and Locality: 12_physical_aware/fanout_and_locality.md
+      - Congestion-Aware Structure: 12_physical_aware/congestion_aware_structure.md
+      - Hierarchy and Placement: 12_physical_aware/hierarchy_and_placement.md
+      - RTL to Post-Route Feedback: 12_physical_aware/rtl_to_post_route_feedback.md
+  - 13. Verification & Robustness:
+      - Assertion-Driven RTL: 13_verification/assertion_driven_rtl.md
+      - Corner-Case Matrix: 13_verification/corner_case_matrix.md
+      - Lint, Formal, and Equivalence: 13_verification/lint_formal_equivalence.md
+      - Reset and Mode Transition Verification: 13_verification/reset_mode_transition_verification.md
+  - 14. Common RTL Anti-Patterns:
+      - Raw Clock Gating: 14_anti_patterns/raw_clock_gating.md
+      - Free-Running Unused Counter: 14_anti_patterns/free_running_unused_counter.md
+      - Reset Everything: 14_anti_patterns/reset_everything.md
+      - Oversized Register: 14_anti_patterns/oversized_register.md
+      - Deep Priority Chain: 14_anti_patterns/deep_priority_chain.md
+      - Independent 2FF Bus: 14_anti_patterns/independent_2ff_bus.md
+      - MCP Used to Hide Timing: 14_anti_patterns/mcp_used_to_hide_timing.md
+      - Excessive Pipeline: 14_anti_patterns/excessive_pipeline.md
+      - Unnecessary Clear: 14_anti_patterns/unnecessary_clear.md
+      - Enable Everywhere: 14_anti_patterns/enable_everywhere.md
+      - Large Decode Without Timing Review: 14_anti_patterns/large_decode_without_timing_review.md
+      - Ignoring Synthesis Result and Fanout: 14_anti_patterns/ignoring_synthesis_result_and_fanout.md
+      - Assumption Hidden Only in SDC: 14_anti_patterns/assumption_hidden_only_in_sdc.md
   - 15. Design Review Checklist:
       - RTL Design Review Checklist: 15_checklist/rtl_design_review_checklist.md
 

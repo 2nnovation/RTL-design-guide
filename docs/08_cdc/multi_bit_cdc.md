@@ -229,6 +229,7 @@ flowchart TD
 
 ## 관련 문서
 
+- [Independent 2FF Bus](../14_anti_patterns/independent_2ff_bus.md): bit별 synchronizer bank의 실패 조건과 protocol evidence
 - [CDC Overview](overview.md)
 - [Bundled Data](bundled_data.md)
 - [Pulse Crossing](pulse_crossing.md)

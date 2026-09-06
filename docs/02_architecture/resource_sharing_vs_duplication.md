@@ -128,6 +128,7 @@ lane 1         X      Y
 - Shared adder는 매 cycle 한 request를 issue할 수 있다.
 - Accepted request의 result는 다음 output-valid slot에 owner와 함께 나타난다.
 - Reset 우선순위는 pending output-valid를 폐기한다.
+- Reset assertion 중 ready와 grant를 모두 0으로 만들어 새 request를 accept하지 않는다.
 - Client는 `req*_ready == 0`이면 valid와 payload를 유지해야 한다.
 
 ```systemverilog
@@ -152,10 +153,10 @@ module shared_adder_two_clients (
     logic [15:0] selected_b;
 
     always_comb begin
-        grant0    = req0_valid;
-        grant1    = !req0_valid && req1_valid;
-        req0_ready = 1'b1;
-        req1_ready = !req0_valid;
+        grant0     = rst_n && req0_valid;
+        grant1     = rst_n && !req0_valid && req1_valid;
+        req0_ready = rst_n;
+        req1_ready = rst_n && !req0_valid;
 
         selected_a = req0_a;
         selected_b = req0_b;
@@ -183,6 +184,8 @@ endmodule
 ```
 
 `rsp_owner == 0`은 client 0, `rsp_owner == 1`은 client 1을 뜻한다. Operand를 17-bit로 확장한 뒤 더해 carry를 보존한다. `rsp_valid`와 owner는 sum과 같은 transaction에 맞춰 register된다.
+
+Reset 중 ready/grant가 0이므로 client는 acceptance로 오해할 handshake를 볼 수 없다. Reset이 해제될 때까지 valid와 payload를 유지할지는 upstream protocol contract다. Asynchronous reset의 deassertion은 별도의 reset synchronization 정책을 따라야 하며, 이 combinational gating 자체가 safe deassertion을 보장하지는 않는다.
 
 이 예제는 output backpressure가 없다는 contract를 가정한다. `rsp_ready`가 필요하다면 output hold 또는 response FIFO가 추가되어야 하며, 그 상태가 찼을 때 request ready를 낮춰야 한다.
 
@@ -368,6 +371,11 @@ ap_at_most_one_accept:
     assert property (@(posedge clk) disable iff (!rst_n)
         !((req0_valid && req0_ready) &&
           (req1_valid && req1_ready))
+    );
+
+ap_no_accept_during_reset:
+    assert property (@(posedge clk)
+        !rst_n |-> !(req0_ready || req1_ready || grant0 || grant1)
     );
 
 ap_owner_matches_client1:

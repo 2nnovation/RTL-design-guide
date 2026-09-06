@@ -263,4 +263,5 @@ Feedback to RTL or architecture
 - [Timing Design & Optimization](overview.md)
 - [Pipeline Design](pipeline.md)
 - [Multi-Cycle Path](multi_cycle_path.md)
+- [Reading Synthesis Reports](../11_synthesis/read_synthesis_reports.md)
 - [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)

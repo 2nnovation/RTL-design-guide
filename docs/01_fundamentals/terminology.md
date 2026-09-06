@@ -52,9 +52,19 @@ Clock domain 판단에는 waveform, phase, divider/mux/gating 구조, mode별 �
 
 | 용어 | 정의 | Review 질문 |
 |---|---|---|
-| Latency | input transaction을 accept한 시점부터 대응하는 output이 유효해지는 시점까지의 지연 | fixed인가, variable인가? |
+| Latency | input transaction을 accept한 active edge부터 대응하는 output valid/data를 downstream sequential consumer가 처음 관찰·capture하는 active edge까지의 cycle 수 | fixed인가, variable인가? |
 | Throughput | 단위 시간 또는 cycle당 완료할 수 있는 transaction 수 | steady state에서 매 cycle 결과가 가능한가? |
 | Initiation interval, II | 연속된 두 input transaction을 accept할 수 있는 최소 cycle 간격 | latency와 독립적으로 정의됐는가? |
+
+이 가이드에서 별도 설명이 없으면 interface latency는 다음 convention으로 센다.
+
+- Input transaction이 accept된 active edge를 E0로 둔다.
+- Matching output valid/data를 downstream sequential logic 또는 concurrent SVA가 preponed sample에서 처음 관찰·capture하는 edge까지 센다.
+- Producer output register가 어떤 edge의 NBA region에서 값을 publish한 것과, 같은 edge의 downstream sequential consumer가 그 새 값을 capture하는 것은 구분한다.
+
+예를 들어 E0에서 `valid_input_q <= in_valid`, E1에서 `out_valid <= valid_input_q`가 실행되는 two-register valid path를 생각하자. `out_valid`는 E1 NBA 뒤에 올라가지만, E1의 downstream FF와 concurrent assertion은 이미 preponed value를 sampling했다. 따라서 첫 synchronous observation/capture는 E2이고 이 가이드의 interface latency는 2 cycle이다.
+
+MCP에서 말하는 source launch edge부터 destination/result register capture edge까지의 내부 timing-path cycle 수는 별도 metric이다. Result register가 capture한 값을 외부 synchronous consumer가 언제 관찰하는지까지 포함하는 interface latency와 자동으로 같은 숫자가 되지는 않는다.
 
 Latency가 4 cycle인 pipeline도 II가 1이면 매 cycle 새 input을 받을 수 있다. 반대로 latency가 2 cycle인 공유 연산기가 완료될 때까지 busy라면 II도 2 이상일 수 있다.
 

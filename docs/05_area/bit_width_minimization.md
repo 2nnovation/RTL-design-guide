@@ -445,6 +445,7 @@ Parameterized regression에는 legal minimum parameter와 representative large/n
 
 ## 관련 문서
 
+- [Oversized Register](../14_anti_patterns/oversized_register.md): reachable range가 없는 wide state의 탐지와 증거
 - [Area Design & Optimization](overview.md)
 - [FSM and Counter Encoding](fsm_counter_encoding.md)
 - [Width and Signedness](../01_fundamentals/width_and_signedness.md)

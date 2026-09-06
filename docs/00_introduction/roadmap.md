@@ -169,7 +169,7 @@ Control phase에서 생성한 mode/select/valid는 작성 완료된 **10. Datapa
 
 작성 완료: `width_signedness.md`, `overflow_saturation_rounding.md`, `mux_and_select.md`, `parallel_precomputation.md`
 
-다음 단계: **11. Synthesis-Aware RTL** chapter에서 RTL construct와 실제 mapping/report feedback을 확장한다.
+RTL construct와 실제 mapping/report feedback은 작성 완료된 **11. Synthesis-Aware RTL** chapter로 연결한다.
 
 ### 11. Synthesis-Aware RTL
 
@@ -180,7 +180,9 @@ Control phase에서 생성한 mode/select/valid는 작성 완료된 **10. Datapa
 - synthesis report/netlist feedback
 - avoid over-coding tool optimizations
 
-우선 작성: `rtl_to_hardware_mapping.md`, `enable_and_mux_inference.md`, `constant_dead_logic.md`, `read_synthesis_reports.md`
+작성 완료: [RTL to Hardware Mapping](../11_synthesis/rtl_to_hardware_mapping.md), [Enable and MUX Inference](../11_synthesis/enable_and_mux_inference.md), [Constant and Dead Logic](../11_synthesis/constant_dead_logic.md), [Reading Synthesis Reports](../11_synthesis/read_synthesis_reports.md)
+
+Mapping/report 증거는 작성 완료된 **12. Physical-Aware RTL**의 fanout/locality, congestion, hierarchy/placement와 post-route feedback으로 연결한다.
 
 ### 12. Physical-Aware RTL
 
@@ -191,7 +193,9 @@ Control phase에서 생성한 mode/select/valid는 작성 완료된 **10. Datapa
 - replication and locality
 - PPA feedback loop
 
-우선 작성: `fanout_and_locality.md`, `congestion_aware_structure.md`, `hierarchy_and_placement.md`, `rtl_to_post_route_feedback.md`
+작성 완료: [Fanout and Locality](../12_physical_aware/fanout_and_locality.md), [Congestion-Aware Structure](../12_physical_aware/congestion_aware_structure.md), [Hierarchy and Placement](../12_physical_aware/hierarchy_and_placement.md), [RTL to Post-Route Feedback](../12_physical_aware/rtl_to_post_route_feedback.md)
+
+**13. Verification & Robustness**의 우선 문서 4개와 **14. Common RTL Anti-Patterns**의 계획 문서 13개를 작성했다. 다음 단계는 cross-chapter technical audit와 예제 검증을 수행하고 release candidate 조건의 충족 여부를 판단하는 것이다. 작성 완료는 EDA 검증이나 공개 release 완료를 뜻하지 않는다.
 
 ### 13. Verification & Robustness
 
@@ -202,25 +206,31 @@ Control phase에서 생성한 mode/select/valid는 작성 완료된 **10. Datapa
 - lint, formal and equivalence
 - illegal state and protocol violation
 
-우선 작성: `assertion_driven_rtl.md`, `corner_case_matrix.md`, `lint_formal_equivalence.md`, `reset_mode_transition_verification.md`
+작성 완료: [Assertion-Driven RTL](../13_verification/assertion_driven_rtl.md), [Corner-Case Matrix](../13_verification/corner_case_matrix.md), [Lint, Formal, and Equivalence](../13_verification/lint_formal_equivalence.md), [Reset and Mode Transition Verification](../13_verification/reset_mode_transition_verification.md)
+
+Verification의 우선 문서와 계획된 Anti-Patterns 문서가 연결되었으며 다음 확장은 전체 guide audit에서 발견한 검토 공백을 기준으로 진행한다.
 
 ### 14. Common RTL Anti-Patterns
 
-각 항목은 Bad example → failure mechanism → better architecture → exceptions 순서를 따른다.
+각 항목은 Bad example → failure mechanism → better architecture → exceptions → verification evidence 순서를 따른다.
 
-- raw clock gating
-- free-running unused counter
-- reset everything
-- oversized register
-- deep priority chain
-- independent 2FF bus
-- MCP used to hide timing
-- excessive pipeline
-- unnecessary clear
-- enable everywhere
-- large decode without timing review
-- ignored synthesis/fanout
-- assumption hidden only in SDC
+작성 완료:
+
+- [Raw Clock Gating](../14_anti_patterns/raw_clock_gating.md)
+- [Free-Running Unused Counter](../14_anti_patterns/free_running_unused_counter.md)
+- [Reset Everything](../14_anti_patterns/reset_everything.md)
+- [Oversized Register](../14_anti_patterns/oversized_register.md)
+- [Deep Priority Chain](../14_anti_patterns/deep_priority_chain.md)
+- [Independent 2FF Bus](../14_anti_patterns/independent_2ff_bus.md)
+- [MCP Used to Hide Timing](../14_anti_patterns/mcp_used_to_hide_timing.md)
+- [Excessive Pipeline](../14_anti_patterns/excessive_pipeline.md)
+- [Unnecessary Clear](../14_anti_patterns/unnecessary_clear.md)
+- [Enable Everywhere](../14_anti_patterns/enable_everywhere.md)
+- [Large Decode Without Timing Review](../14_anti_patterns/large_decode_without_timing_review.md)
+- [Ignoring Synthesis Result and Fanout](../14_anti_patterns/ignoring_synthesis_result_and_fanout.md)
+- [Assumption Hidden Only in SDC](../14_anti_patterns/assumption_hidden_only_in_sdc.md)
+
+계획된 anti-pattern 13개 중 남은 미작성 문서는 0개다. 이후 작업은 canonical 문서와의 기술적 일관성·중복 경계 감사, SystemVerilog/SVA 예제 검증, rendered page 점검이다. Commit/tag/release와 공개 작업은 별도 승인 후 진행한다.
 
 ### 15. RTL Design Review Checklist
 

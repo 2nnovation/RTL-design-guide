@@ -78,12 +78,12 @@ provisional combinational + net target        0.65 ns
 
 ## 3. Block Budget과 Stage Budget
 
-End-to-end latency가 2 cycle이라고 두 stage에 delay를 정확히 절반씩 나누는 것이 항상 가능한 것은 아니다.
+두 combinational stage를 사용한다고 stage delay를 정확히 절반씩 나눌 수 있는 것은 아니다. 아래처럼 E0 input capture와 E2 output-register publication 사이에 두 combinational stage가 있으면, 이 가이드의 synchronous-consumer convention에서 interface latency는 E0→E3의 3 cycle이다.
 
 ```text
-Accept E0          E1                     E2 Output
-   │               │                       │
-   └─ Stage A ─────┴────── Stage B ─────────┘
+Accept E0          E1                     E2 Output FF       E3 Consumer
+   │               │                       │                    │
+   └─ Stage A ─────┴────── Stage B ─────────┘                    │
 ```
 
 Stage마다 다음을 기록한다.
@@ -169,8 +169,9 @@ Control만 앞당기고 payload/tag를 같은 transaction에 맞추지 않으면
 
 - E0: input operands, mask와 valid capture
 - E1: 9-bit sum, aligned mask와 valid capture
-- E2: output result와 valid capture
-- Latency: accept E0 → output valid E2
+- E2 NBA 뒤: output result와 valid를 output register에서 publish
+- E3: downstream sequential consumer 또는 concurrent SVA가 matching output을 처음 관찰·capture
+- Interface latency: accept E0 → synchronous output observation E3, 3 cycle
 - II: 1, stall 없는 free-running pipeline
 - Event priority: reset → normal advance
 
@@ -227,14 +228,15 @@ endmodule
 ### Cycle audit
 
 ```text
-edge                  E0        E1        E2        E3
-accept                 A         B
-captured input         A         B
-sum/mask state                   A         B
-output valid/result                       A         B
+edge                         E0        E1        E2        E3        E4
+accept                        A         B
+captured input, NBA 후        A         B
+sum/mask state, NBA 후                  A         B
+output register, NBA 후                           A         B
+downstream observation                                      A         B
 ```
 
-Nonblocking assignment 때문에 E1의 sum은 E0에서 capture한 operands를 사용하고, E2 output은 E1에서 capture한 `sum_q`와 `mask_sum_q`를 사용한다. Mask와 valid가 data와 같은 stage를 이동하므로 back-to-back transaction A/B가 섞이지 않는다.
+Nonblocking assignment 때문에 E1의 sum은 E0에서 capture한 operands를 사용하고, output register는 E2에서 E1의 `sum_q`와 `mask_sum_q`를 읽어 NBA 뒤 A를 publish한다. 같은 E2 edge의 downstream FF와 concurrent SVA는 이전 값을 sampling했으므로 A를 처음 synchronous하게 관찰·capture하는 edge는 E3다. Mask와 valid가 data와 같은 stage를 이동하므로 back-to-back transaction A/B가 섞이지 않는다.
 
 Payload registers는 corresponding valid가 0일 때 hold하고 reset하지 않는다. Valid state만 reset하여 in-flight transaction을 폐기한다. Safety/test requirement가 invalid payload의 known value를 요구하면 reset strategy를 별도로 결정한다.
 
@@ -376,7 +378,7 @@ Placement, routing와 clock가 반영되면 path 순서와 margin이 바뀔 수 
 - Stall/flush가 있다면 모든 stage가 동일한 protocol로 advance/hold되는가?
 
 ```systemverilog
-parameter int LATENCY = 2;
+parameter int LATENCY = 3;
 
 ap_budgeted_latency:
     assert property (@(posedge clk) disable iff (!rst_n)
@@ -384,7 +386,7 @@ ap_budgeted_latency:
     );
 ```
 
-이 property는 문서의 E0→E2 interface contract를 표현하는 설명용 예다. 실제 assertion monitor의 sampling convention과 backpressure semantics를 프로젝트에서 명시한다.
+이 property는 문서의 E0 accept→E3 synchronous observation interface contract를 표현하는 설명용 예다. Producer output register의 E2 NBA publication과 E3 preponed observation을 구분한다. 실제 환경에 backpressure가 있으면 acceptance와 consumption event를 protocol에 맞게 바꾼다.
 
 ### Timing evidence review
 

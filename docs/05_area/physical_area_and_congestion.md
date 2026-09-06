@@ -344,3 +344,5 @@ Physical optimization은 tool-specific 결과가 크므로 report path, constrai
 - [Multi-Cycle Path](../03_timing/multi_cycle_path.md)
 - [Timing Overview](../03_timing/overview.md)
 - [Clock Design Overview](../06_clock/overview.md)
+- [Fanout and Locality](../12_physical_aware/fanout_and_locality.md)
+- [Congestion-Aware Structure](../12_physical_aware/congestion_aware_structure.md)

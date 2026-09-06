@@ -1,7 +1,6 @@
 # Multi-Cycle Path
 
-> **Multi-Cycle Path(MCP)는 느린 path를 빠르게 만드는 기능이 아니다.**  
-> Architecture가 이미 여러 clock cycle 뒤에만 데이터를 capture하도록 정의되어 있을 때, 그 functional timing requirement를 STA constraint로 표현하는 방법이다.
+> **Multi-Cycle Path(MCP)는 느린 path를 빠르게 만드는 기능이 아니다.** Architecture가 이미 여러 clock cycle 뒤에만 데이터를 capture하도록 정의되어 있을 때, 그 functional timing requirement를 STA constraint로 표현하는 방법이다.
 
 MCP는 매우 유용하지만 timing exception 중에서도 오용 위험이 크다. Constraint 한 줄로 negative slack이 사라질 수 있기 때문에, hardware protocol이 준비되지 않은 상태에서도 문제가 해결된 것처럼 보일 수 있다. MCP의 출발점은 timing report가 아니라 **launch와 capture 사이의 기능 계약(functional contract)** 이어야 한다.
 
@@ -43,6 +42,8 @@ MCP가 하는 일과 하지 않는 일을 분리하면 다음과 같다.
 | Constraint review를 통해 설계 의도를 추적할 수 있게 한다. | Destination이 intermediate cycle에 capture/consume하는 것을 막지 않는다. |
 
 따라서 “MCP를 적용했으므로 multi-cycle hardware가 되었다”는 설명은 틀렸다. **먼저 RTL과 protocol이 multi-cycle이어야 하고, constraint는 그 사실을 기술해야 한다.**
+
+이 문서의 “three-cycle”은 E0 source launch에서 E3 destination/result-register capture까지의 **내부 timing-path requirement**를 뜻한다. Result register가 E3 NBA 뒤 valid/data를 publish한다면 같은 E3 edge의 downstream sequential consumer나 concurrent SVA는 그 새 값을 아직 sampling하지 못하고 E4에서 처음 관찰할 수 있다. 그 경우 [canonical interface latency](../01_fundamentals/terminology.md#3-latency-throughput-initiation-interval)는 4 cycle일 수 있지만, MCP endpoint의 intended capture edge는 여전히 E3다. 두 metric을 섞어 MCP setup cycle을 임의로 한 cycle 늘려서는 안 된다.
 
 ---
 
@@ -641,6 +642,8 @@ MCP 적용 여부는 “몇 cycle이면 timing이 통과하는가?”가 아니�
 
 ## 14. 관련 문서
 
+- [Assumption Hidden Only in SDC](../14_anti_patterns/assumption_hidden_only_in_sdc.md): timing exception의 functional contract, mode/lifecycle과 constraint drift 관리
+- [MCP Used to Hide Timing](../14_anti_patterns/mcp_used_to_hide_timing.md): negative slack 은폐를 판정하는 review evidence
 - [Timing Design & Optimization](overview.md): timing path와 RTL optimization decision flow
 - [Critical Path](critical_path.md): violation의 실제 logic/net/control 원인 분석
 - [Pipeline Design](pipeline.md): hardware stage를 추가하는 대안과 control alignment

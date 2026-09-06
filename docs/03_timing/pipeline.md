@@ -310,6 +310,7 @@ Latency가 달라졌으므로 cycle-by-cycle equivalence보다 latency mapping�
 
 ## 관련 문서
 
+- [Excessive Pipeline](../14_anti_patterns/excessive_pipeline.md): stage 추가의 과잉 여부와 review evidence
 - [Timing Design & Optimization](overview.md)
 - [Critical Path](critical_path.md)
 - [Multi-Cycle Path](multi_cycle_path.md)

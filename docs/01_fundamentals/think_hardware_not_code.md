@@ -205,22 +205,23 @@ Operator symbol만 보고 한 gate라고 생각하거나, 반대로 항상 특�
 
 다음과 같은 generic requirement를 생각해 보자.
 
-> `req`가 accept된 뒤 정확히 2 cycle 후, `a + b`가 `limit`보다 큰지를 `result_valid`와 함께 출력한다. 매 cycle 새 request를 받을 수 있어야 한다.
+> `req`가 accept된 뒤 정확히 3 cycle 후, `a + b`가 `limit`보다 큰지를 downstream sequential consumer가 `result_valid`와 함께 관찰·capture한다. 매 cycle 새 request를 받을 수 있어야 한다.
 
 ### 5.1 Architecture decision
 
-- Latency: 2 cycles
+- Interface latency: 3 cycles
 - Initiation interval: 1 cycle
 - Accept edge: input과 request capture
 - Stage 1: addition과 compare operand capture
-- Stage 2: compare와 output capture
-- `valid`도 두 cycle의 register boundary에 맞춰 이동
+- Stage 2: compare와 output register capture/publication
+- Consumer edge: output register의 NBA update를 다음 active edge에서 관찰·capture
+- `valid`도 세 sequential observation boundary에 맞춰 이동
 - Addition carry를 보존할 수 있도록 intermediate width를 한 bit 확장
 
 ```text
- a,b,limit --> [input FF] --> [add + operand FF] --> [compare + output FF]
- req ----------> req_q ----------> sum_valid_q ----------> result_valid
-                  edge N              edge N+1                 edge N+2
+ a,b,limit --> [input FF] --> [add + operand FF] --> [compare + output FF] --> [consumer FF]
+ req ----------> req_q ----------> sum_valid_q ----------> result_valid       --> capture
+                  edge N              edge N+1              edge N+2 NBA          edge N+3
 ```
 
 ```systemverilog
@@ -265,6 +266,8 @@ assign result_valid = result_valid_q;
 ```
 
 이 예제는 architecture discussion을 위한 부분 RTL이다. 실제 interface에서는 reset polarity, request acceptance, backpressure, output hold requirement와 parameterized width를 명시해야 한다.
+
+`result_valid_q`는 edge N+2의 NBA 뒤 transaction A에 대해 올라가지만, 같은 N+2 edge의 downstream FF와 concurrent SVA는 이전 값을 sampling한다. 따라서 [canonical latency convention](terminology.md#3-latency-throughput-initiation-interval)에 따른 A의 첫 synchronous observation/capture edge는 N+3이다.
 
 ### 5.2 Hardware review
 

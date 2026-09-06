@@ -150,6 +150,43 @@ Remove → Disable → Simplify → Share / Duplicate as appropriate
 - [Datapath MUX and Select](10_datapath/mux_and_select.md): wide select topology, invalid/one-hot contract, late select와 routing 비용을 검토합니다.
 - [Datapath Parallel Pre-computation](10_datapath/parallel_precomputation.md): registered candidates와 select/valid alignment, speculative ownership과 commit point를 설계합니다.
 
+### Synthesis-Aware RTL
+
+- [RTL to Hardware Mapping](11_synthesis/rtl_to_hardware_mapping.md): Elaboration, generic representation, optimization과 library mapping을 구분하고 RTL 구조 가설을 netlist 증거로 확인합니다.
+- [Enable and MUX Inference](11_synthesis/enable_and_mux_inference.md): Hold/clear priority, feedback MUX·enable cell·ICG 변환과 grouping의 실제 구현을 검토합니다.
+- [Constant and Dead Logic](11_synthesis/constant_dead_logic.md): Parameter, tie-off와 분석 가정을 구분하고 제거된 logic의 configuration·observer·initialization 계약을 확인합니다.
+- [Reading Synthesis Reports](11_synthesis/read_synthesis_reports.md): Run provenance와 coverage부터 timing, area, power, netlist cross-probe와 동일 조건 실험까지 연결합니다.
+
+### Physical-Aware RTL
+
+- [Fanout and Locality](12_physical_aware/fanout_and_locality.md): Load와 route geometry, local decode와 synchronous replica의 계약을 post-place/post-route 증거로 판단합니다.
+- [Congestion-Aware Structure](12_physical_aware/congestion_aware_structure.md): Routing demand/capacity와 pin access를 구분하고 local processing, communication width와 serialization의 기능·PPA 비용을 비교합니다.
+- [Hierarchy and Placement](12_physical_aware/hierarchy_and_placement.md): Logical/physical 경계, interface cut, port·macro affinity와 boundary register의 cycle 계약을 설계합니다.
+- [RTL to Post-Route Feedback](12_physical_aware/rtl_to_post_route_feedback.md): 단계별 증거를 원인·owner·승인·회귀 검증으로 연결하고 가설과 A/B 결과를 재현 가능하게 남깁니다.
+
+### Verification & Robustness
+
+- [Assertion-Driven RTL](13_verification/assertion_driven_rtl.md): Assumption·assertion·cover의 책임, sampling/NBA와 reset priority를 구분하고 vacuity와 검증 범위를 확인합니다.
+- [Corner-Case Matrix](13_verification/corner_case_matrix.md): State·boundary·동시 사건·시간 순서를 기대값 모델, checker, coverage와 재현 가능한 evidence로 연결합니다.
+- [Lint, Formal, and Equivalence](13_verification/lint_formal_equivalence.md): 검증 방법별 보장 범위와 전제를 구분하고 X·초기 상태·blackbox·반례를 회귀 검증으로 연결합니다.
+- [Reset and Mode Transition Verification](13_verification/reset_mode_transition_verification.md): Outstanding transaction의 drain/abort, mode commit, reset epoch와 clock stop/resume를 acceptance edge 기준으로 검증합니다.
+
+### Common RTL Anti-Patterns
+
+- [Raw Clock Gating](14_anti_patterns/raw_clock_gating.md): 조합 논리가 만든 clock edge의 실패 조건과 target별 안전한 clock-control 증거를 검토합니다.
+- [Free-Running Unused Counter](14_anti_patterns/free_running_unused_counter.md): 값의 live window를 찾아 Remove→Disable 순서로 불필요한 counter switching을 줄입니다.
+- [Reset Everything](14_anti_patterns/reset_everything.md): State inventory와 valid-guard contract로 필요한 reset과 습관적인 datapath reset을 구분합니다.
+- [Oversized Register](14_anti_patterns/oversized_register.md): Reachable range, boundary policy와 parameter corner를 근거로 width와 실제 mapped cone을 확인합니다.
+- [Deep Priority Chain](14_anti_patterns/deep_priority_chain.md): Source order의 실제 priority 계약과 selection depth·late control·fairness 증거를 검토합니다.
+- [Independent 2FF Bus](14_anti_patterns/independent_2ff_bus.md): Bit별 metastability containment와 word coherency를 구분하고 traffic에 맞는 CDC protocol을 선택합니다.
+- [MCP Used to Hide Timing](14_anti_patterns/mcp_used_to_hide_timing.md): Negative slack을 감추는 exception과 실제 multi-cycle capture 계약을 구분합니다.
+- [Excessive Pipeline](14_anti_patterns/excessive_pipeline.md): Stage 추가가 latency·II·alignment·physical cost를 감수할 만큼 실제 bottleneck을 분할하는지 검토합니다.
+- [Unnecessary Clear](14_anti_patterns/unnecessary_clear.md): 정상 동작 중 unowned payload를 0으로 쓰는 대신 valid·occupancy·epoch contract를 검토합니다.
+- [Enable Everywhere](14_anti_patterns/enable_everywhere.md): Fine-grain enable의 실제 mapping, upstream activity와 control-distribution 비용을 확인합니다.
+- [Large Decode Without Timing Review](14_anti_patterns/large_decode_without_timing_review.md): Wide decode를 late high-fanout control과 downstream MUX까지 포함한 timing/physical network로 분석합니다.
+- [Ignoring Synthesis Result and Fanout](14_anti_patterns/ignoring_synthesis_result_and_fanout.md): Unexpected removal과 실제 control distribution을 RTL→합성→STA→P&R 증거로 추적합니다.
+- [Assumption Hidden Only in SDC](14_anti_patterns/assumption_hidden_only_in_sdc.md): Timing exception과 mode 가정을 RTL·검증·CDC 계약, lifecycle과 변경 책임에 연결합니다.
+
 ### Review
 
 - [RTL Design Review Checklist](15_checklist/rtl_design_review_checklist.md): Architecture부터 Verification까지 바로 사용할 수 있는 질문을 제공합니다.

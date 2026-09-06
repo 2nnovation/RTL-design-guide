@@ -342,3 +342,7 @@ MUX, arbitration, fanout과 initiation interval 비용을 포함하지 않은 sh
 - [ ] Synthesis mapping과 critical path가 예상 구조와 일치하는가?
 
 Wide data selection의 invalid/one-hot contract와 physical select topology는 [Datapath MUX and Select](../10_datapath/mux_and_select.md)를 참고한다. 전체 검토에는 [RTL Design Review Checklist](../15_checklist/rtl_design_review_checklist.md)를 함께 사용한다.
+
+Priority/MUX 가설을 elaboration, generic representation과 mapped netlist로 추적하는 절차는 [RTL to Hardware Mapping](../11_synthesis/rtl_to_hardware_mapping.md)을 참고한다.
+
+긴 selection chain을 review에서 판정하는 요약은 [Deep Priority Chain](../14_anti_patterns/deep_priority_chain.md)을 참고한다.
