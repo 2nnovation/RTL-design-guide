@@ -6,6 +6,12 @@ MCP는 매우 유용하지만 timing exception 중에서도 오용 위험이 크
 
 [Timing Design & Optimization](overview.md)에서 설명한 logic simplification, pre-computation, duplication과 pipeline을 먼저 함께 검토하고, architecture가 실제로 multi-cycle일 때만 이 문서의 기준을 적용한다.
 
+!!! info "이 문서에서 판단할 것"
+    1. Architecture가 실제로 여러 cycle 뒤의 capture를 요구하는가?
+    2. Source stability, destination enable과 intermediate-value 비사용을 RTL과 protocol이 보장하는가?
+    3. Setup·hold edge와 constraint scope를 STA report에서 확인할 수 있는가?
+    4. Pipeline, simplification 또는 duplication보다 MCP가 요구사항과 PPA에 적합한가?
+
 ---
 
 ## 1. MCP가 의미하는 것

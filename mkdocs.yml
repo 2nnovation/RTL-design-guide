@@ -8,8 +8,10 @@ theme:
   name: material
   language: ko
   features:
-    - navigation.sections
     - navigation.indexes
+    - navigation.tracking
+    - navigation.path
+    - navigation.prune
     - navigation.top
     - toc.follow
     - search.suggest
@@ -39,6 +41,7 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      toc_depth: 2
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
@@ -55,6 +58,9 @@ markdown_extensions:
 extra_javascript:
   - https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js
   - javascripts/mermaid-init.js
+
+extra_css:
+  - stylesheets/extra.css
 
 nav:
   - Home: index.md

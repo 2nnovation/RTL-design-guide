@@ -1,24 +1,76 @@
+<div class="rtl-hero" markdown>
+
+<span class="rtl-kicker">PRACTICAL RTL ENGINEERING GUIDE</span>
+
 # RTL Design & Optimization Guide
 
-> **RTL은 code가 아니라 hardware architecture의 기술이다.**
+**RTL은 code가 아니라 hardware architecture의 기술이다.**
 
-이 가이드는 SystemVerilog 문법을 나열하는 문서가 아닙니다. 같은 기능을 수행하는 RTL이라도 어떤 architecture를 선택하고, 어디에 state를 두며, 언제 값을 계산하고, 무엇을 움직이지 않게 할지에 따라 합성되는 hardware의 Timing, Power, Area(PPA)와 robustness가 달라집니다. 이 문서는 그 차이를 질문하고 검증하는 방법을 다룹니다.
+같은 기능을 수행하는 RTL이라도 architecture, state, calculation schedule과 activity control에 따라 합성되는 hardware의 Timing, Power, Area(PPA)와 robustness가 달라집니다. 이 가이드는 그 차이를 설계하고 검증하는 방법을 다룹니다.
+
+[처음부터 읽기](00_introduction/overview.md){ .md-button .md-button--primary }
+[설계 리뷰 시작](15_checklist/rtl_design_review_checklist.md){ .md-button }
+[GitHub 저장소](https://github.com/2nnovation/RTL-design-guide){ .md-button }
+
+</div>
+
+## 어디서 시작할까
+
+<div class="grid cards rtl-start-grid" markdown>
+
+-   **개념부터 체계적으로 읽기**
+
+    좋은 RTL의 기준부터 hardware 관점, architecture와 timing으로 이어지는 권장 학습 경로입니다.
+
+    [Introduction에서 시작 →](00_introduction/overview.md)
+
+-   **현재 설계 문제 해결하기**
+
+    Timing, power, clock, reset과 CDC처럼 지금 검토 중인 문제에서 바로 시작합니다.
+
+    [Timing](03_timing/overview.md) · [Low Power](04_low_power/overview.md) · [CDC](08_cdc/overview.md)
+
+-   **Design Review 진행하기**
+
+    Architecture부터 verification까지 빠뜨리기 쉬운 질문을 실무 체크리스트로 확인합니다.
+
+    [Review Checklist 열기 →](15_checklist/rtl_design_review_checklist.md)
+
+</div>
 
 ## 이 가이드가 말하는 좋은 RTL
 
-좋은 RTL은 다음 조건을 함께 만족하는 설계입니다.
+<div class="grid cards" markdown>
 
-- **Function**: 모든 정상·경계·동시 조건에서 specification과 일치한다.
-- **Timing**: 목표 clock과 interface timing을 구현 가능한 architecture로 만족한다.
-- **Power**: 사용하지 않는 state와 datapath의 불필요한 switching을 줄인다.
-- **Area**: width, register, logic, routing 자원을 목적에 맞게 사용한다.
-- **Clock / Reset / CDC**: state transition과 domain crossing의 assumption이 명시적이고 안전하다.
-- **Robustness**: illegal state, overflow, pulse loss, protocol violation을 고려한다.
-- **Maintainability**: RTL, constraint, assertion, document가 같은 architecture contract를 설명한다.
+-   **Function & Robustness**
 
-한 항목만 극단적으로 줄이는 것은 대개 최적화가 아닙니다. Logic sharing으로 area를 줄였지만 MUX와 fanout 때문에 timing이 나빠질 수 있고, pipeline으로 timing을 개선했지만 latency·FF area·clock power가 증가할 수 있습니다. 따라서 설계 판단에는 언제나 요구사항과 trade-off가 함께 있어야 합니다.
+    정상 동작뿐 아니라 boundary, simultaneous event, illegal state와 protocol violation에서도 specification을 만족합니다.
 
-## 시작하기: Requirement에서 Feedback까지
+-   **Architecture & Timing**
+
+    Latency와 throughput 요구를 register boundary, datapath와 control schedule로 구현하고 STA evidence로 확인합니다.
+
+-   **Power & Area**
+
+    불필요한 state와 switching을 제거하고 width, sharing, duplication과 routing 비용을 함께 평가합니다.
+
+-   **Clock · Reset · CDC**
+
+    State transition과 domain crossing의 assumption, ownership과 safe release 조건을 명시합니다.
+
+-   **Verification**
+
+    RTL의 priority와 interface contract를 assertion, formal, lint와 corner-case test로 검증합니다.
+
+-   **Maintainability**
+
+    RTL, constraint, assertion과 document가 같은 architecture contract를 설명하고 변경 시 함께 갱신됩니다.
+
+</div>
+
+한 항목만 줄여 얻은 숫자를 최적화의 결론으로 삼지 않습니다. Logic sharing은 area를 줄이는 대신 MUX와 fanout를 늘릴 수 있고, pipeline은 timing을 개선하는 대신 latency, FF area와 clock power를 늘릴 수 있습니다. 설계 판단에는 요구사항과 trade-off가 함께 있어야 합니다.
+
+## Requirement에서 Implementation Feedback까지
 
 ```mermaid
 flowchart TD
@@ -33,163 +85,82 @@ flowchart TD
     Q -->|Yes| D[Review and integrate]
 ```
 
-RTL을 작성하기 전에 적어도 다음을 답할 수 있어야 합니다.
-
-1. 결과가 유효해야 하는 cycle은 언제인가?
-2. latency와 throughput 요구는 각각 무엇인가?
-3. input이나 intermediate value가 안정적으로 유지되는 기간은 얼마인가?
-4. block이 idle일 때도 유지되어야 하는 state는 무엇인가?
-5. clock domain을 넘는 signal은 level, pulse, multi-bit data 중 무엇인가?
-6. 이 contract를 assertion, constraint, CDC check로 어떻게 검증할 것인가?
+??? question "RTL을 작성하기 전에 확인할 질문"
+    1. 결과가 유효해야 하는 cycle은 언제인가?
+    2. Latency와 throughput 요구는 각각 무엇인가?
+    3. Input이나 intermediate value가 안정적으로 유지되는 기간은 얼마인가?
+    4. Block이 idle일 때도 유지되어야 하는 state는 무엇인가?
+    5. Clock domain을 넘는 signal은 level, pulse, multi-bit data 중 무엇인가?
+    6. 이 contract를 assertion, constraint와 CDC check로 어떻게 검증할 것인가?
 
 ## Optimization Order
 
-이 가이드의 기본 최적화 순서는 다음과 같습니다.
+> **Remove → Disable → Simplify → Share / Duplicate as appropriate → Pipeline or MCP → Physical optimization**
 
-```text
-Remove → Disable → Simplify → Share / Duplicate as appropriate
-       → Pipeline or MCP → Physical optimization
-```
-
-| 단계 | 핵심 질문 | 대표적인 결과 |
+| 단계 | 먼저 물을 질문 | 대표적인 결과 |
 |---|---|---|
-| Remove | 이 기능, state, bit, calculation이 정말 필요한가? | logic/register 자체 제거 |
-| Disable | 값이 필요하지 않을 때 움직여야 하는가? | register enable, operand isolation |
-| Simplify | 같은 요구를 더 짧은 logic depth나 작은 width로 표현할 수 있는가? | compare/decode/arithmetic 단순화 |
-| Share / Duplicate | 공유와 복제 중 현재 bottleneck에 맞는 쪽은 무엇인가? | area 절감 또는 fanout/timing 개선 |
-| Pipeline or MCP | 결과가 정말 next cycle에 필요한가? | hardware stage 추가 또는 기존 multi-cycle contract 명시 |
-| Physical optimization | wire, congestion, placement, clock 영향인가? | hierarchy/replication/placement feedback |
+| Remove | 이 기능, state, bit와 calculation이 정말 필요한가? | Logic과 register 자체 제거 |
+| Disable | 값이 필요하지 않을 때 움직여야 하는가? | Register enable, operand isolation |
+| Simplify | 같은 요구를 더 짧은 depth나 작은 width로 표현할 수 있는가? | Compare, decode와 arithmetic 단순화 |
+| Share / Duplicate | 현재 bottleneck에는 공유와 복제 중 무엇이 맞는가? | Area 절감 또는 fanout·timing 개선 |
+| Pipeline or MCP | 결과가 정말 next cycle에 필요한가? | Hardware stage 추가 또는 기존 multi-cycle contract 명시 |
+| Physical optimization | Wire, congestion, placement와 clock 영향인가? | Hierarchy, replication과 placement feedback |
 
-!!! warning "MCP는 마지막 순간의 면제 수단이 아니다"
-    Multi-Cycle Path는 hardware를 빠르게 만들지 않습니다. Architecture상 destination이 여러 cycle 뒤에만 값을 capture한다는 **이미 존재하는 functional requirement**가 있을 때 그 requirement를 STA에 표현합니다. 자세한 내용은 [Multi-Cycle Path](03_timing/multi_cycle_path.md)를 참고하세요.
+!!! warning "MCP는 timing violation을 숨기는 수단이 아니다"
+    Multi-Cycle Path는 hardware를 빠르게 만들지 않습니다. Destination이 여러 cycle 뒤에만 capture한다는 functional requirement가 architecture와 RTL에 이미 존재할 때, 그 edge relationship을 STA에 표현합니다. 자세한 판단 기준은 [Multi-Cycle Path](03_timing/multi_cycle_path.md)를 참고하세요.
 
-## 핵심 문서
+## Chapter Map
 
-### Foundation
+<div class="grid cards rtl-chapter-map" markdown>
 
-- [What Makes Good RTL?](00_introduction/overview.md): RTL, synthesis, gate, physical implementation을 하나의 feedback loop로 이해합니다.
-- [Canonical RTL Design Terminology](01_fundamentals/terminology.md): latency, timing, clock, CDC와 PPA 공통 용어를 한 곳에서 정의합니다.
-- [Think Hardware, Not Code](01_fundamentals/think_hardware_not_code.md): RTL 문법을 register, combinational cone, priority, parallelism과 cycle contract로 해석합니다.
-- [Combinational vs Sequential Logic](01_fundamentals/combinational_vs_sequential.md): 현재 입력의 함수와 state를 구분하고 register boundary, latch와 cycle alignment를 설계합니다.
-- [Priority and MUX](01_fundamentals/priority_and_mux.md): simultaneous event의 functional priority와 MUX·decode structure의 비용을 구분합니다.
-- [Width and Signedness](01_fundamentals/width_and_signedness.md): range, arithmetic growth, implicit conversion과 four-state simulation을 hardware cost에 연결합니다.
-- [Documentation Roadmap](00_introduction/roadmap.md): V0.1 이후 전체 Chapter의 책임과 작성 순서를 관리합니다.
+-   **01–02 · Fundamentals & Architecture**
 
-### Architecture & Microarchitecture
+    RTL 문법을 hardware로 해석하고 requirement를 state, cycle contract와 microarchitecture로 내립니다.
 
-- [Requirement to Microarchitecture](02_architecture/requirement_to_microarchitecture.md): 자연어 requirement를 acceptance/completion contract, register boundary, state ownership과 검증 evidence로 내립니다.
-- [State Partitioning and Ownership](02_architecture/state_partitioning_and_ownership.md): Persistent·transaction·protocol·derived state의 owner, lifetime, atomic update와 domain boundary를 설계합니다.
-- [Latency, Throughput and Initiation Interval](02_architecture/latency_throughput_ii.md): 세 metric을 cycle schedule, resource occupancy, backpressure와 실제 처리율에 연결합니다.
-- [Buffering and Backpressure](02_architecture/buffering_and_backpressure.md): Ready/valid storage, burst absorption, occupancy와 no-drop ordering contract를 다룹니다.
-- [Feedback Dependency](02_architecture/feedback_dependency.md): Recurrence의 dependency distance, state update latency와 achievable II를 legal schedule로 분석합니다.
-- [Resource Sharing vs Duplication](02_architecture/resource_sharing_vs_duplication.md): operator 수뿐 아니라 MUX, arbitration, fanout, locality, switching과 latency/II를 포함해 architecture 후보를 비교합니다.
-- [Parallelism and Pre-computation](02_architecture/parallelism_and_precomputation.md): Late select 앞뒤의 계산 배치와 speculative candidate의 PPA·commit 조건을 비교합니다.
-- [Architectural Timing Budget](02_architecture/architectural_timing_budget.md): Interface requirement를 stage work와 provisional budget으로 내리고 STA·physical evidence로 보정합니다.
-- [Microarchitecture Decision Record](02_architecture/microarchitecture_decision_record.md): 후보, 동일 비교 조건, evidence, owner와 change trigger를 재사용 가능한 기록으로 남깁니다.
+    [Fundamentals](01_fundamentals/think_hardware_not_code.md) · [Architecture](02_architecture/requirement_to_microarchitecture.md)
 
-### Timing
+-   **03–05 · Timing, Power & Area**
 
-- [Timing Design & Optimization](03_timing/overview.md): timing path와 critical path를 hardware 구조로 읽고 최적화 순서를 정합니다.
-- [Critical Path](03_timing/critical_path.md): report의 cell/net/control 원인을 분리하고 architecture부터 physical feedback까지 연결합니다.
-- [Pipeline Design](03_timing/pipeline.md): latency, throughput, stage balancing과 data/control alignment를 다룹니다.
-- [Multi-Cycle Path](03_timing/multi_cycle_path.md): valid한 MCP의 functional contract, 검증, setup/hold 관계, pipeline과의 차이를 설명합니다.
+    Critical path, pipeline, switching, bit width와 resource 비용을 PPA trade-off로 비교합니다.
 
-### Low Power
+    [Timing](03_timing/overview.md) · [Low Power](04_low_power/overview.md) · [Area](05_area/overview.md)
 
-- [Low-Power RTL Design](04_low_power/overview.md): switching activity와 capacitance를 RTL에서 어떻게 줄일 수 있는지 살펴봅니다.
-- [Register Enable](04_low_power/register_enable.md): update/hold semantics, synthesis mapping과 enable overhead를 설명합니다.
-- [Counter Optimization](04_low_power/counter_optimization.md): 사용하지 않는 구간의 counting을 멈추고 event priority와 PPA를 함께 검토합니다.
-- [Operand Isolation](04_low_power/operand_isolation.md): destination hold와 combinational activity suppression의 차이를 설명합니다.
+-   **06–08 · Clock, Reset & CDC**
 
-### Area
+    Clock control, reset release와 domain crossing을 state-transition 안전성 관점에서 다룹니다.
 
-- [Area Design & Optimization](05_area/overview.md): Mapped cells와 physical footprint를 구분하고 removal부터 physical feedback까지 최적화합니다.
-- [Bit-Width Minimization](05_area/bit_width_minimization.md): Range, arithmetic growth, parameter corner와 protocol bit를 보존하며 width를 줄입니다.
-- [Unused Logic and State Reduction](05_area/unused_logic_and_state_reduction.md): Observer와 authoritative state를 증명한 뒤 불필요한 logic, register와 derived state를 제거합니다.
-- [Reset Area Cost](05_area/reset_area_cost.md): Resettable state, tree와 memory inference 비용을 기능·test·RDC 계약과 함께 검토합니다.
-- [FSM and Counter Encoding](05_area/fsm_counter_encoding.md): State FF뿐 아니라 decode, fanout, illegal recovery와 physical mapping까지 encoding 후보를 비교합니다.
-- [Memory and Register Array](05_area/memory_and_register_array.md): Port, latency, collision, reset과 macro mapping을 포함해 storage architecture를 선택합니다.
-- [Physical Area and Congestion](05_area/physical_area_and_congestion.md): Synthesis cell area를 placement, routing, buffering와 실제 block footprint evidence로 연결합니다.
+    [Clock](06_clock/overview.md) · [Reset](07_reset/overview.md) · [CDC](08_cdc/overview.md)
 
-### Clock
+-   **09–10 · Control & Datapath**
 
-- [Clock Design Overview](06_clock/overview.md): clock architecture, gating, reset, test와 physical 책임의 전체 흐름을 설명합니다.
-- [Clock Gating](06_clock/clock_gating.md): raw gated clock의 위험, ICG, inferred/explicit gating, root/function clock과 self-deadlock을 다룹니다.
-- [Inferred vs Explicit Clock Gating](06_clock/inferred_vs_explicit.md): functional enable과 architecture clock boundary의 책임을 비교합니다.
-- [Root Clock vs Function Clock](06_clock/root_vs_function_clock.md): always-on partition, sleep/wake와 self-deadlock을 다룹니다.
+    Priority, event, counter boundary와 arithmetic, width, select 구조를 실제 hardware 비용에 연결합니다.
 
-### Reset
+    [Control Logic](09_control_logic/fsm_design.md) · [Datapath](10_datapath/width_signedness.md)
 
-- [Reset Architecture Overview](07_reset/overview.md): Reset requirement, state inventory, domain architecture, completion과 verification flow를 연결합니다.
-- [Synchronous vs Asynchronous Reset](07_reset/sync_vs_async_reset.md): Active-edge와 async-control hardware 차이, clock stop, cell/DFT/RDC trade-off를 비교합니다.
-- [Reset Deassertion and RDC](07_reset/reset_deassertion.md): Async assertion과 controlled release, two-stage release latency와 independent reset domain을 다룹니다.
-- [Resetless Datapath](07_reset/resetless_datapath.md): Valid가 모든 observer를 mask할 때 payload reset을 생략할 수 있는 조건과 X 검증을 설명합니다.
-- [Reset with Clock Gating](07_reset/reset_with_clock_gating.md): Root controller, clock force-on, local release와 reset-done sequence를 설계합니다.
+-   **11–13 · Synthesis, Physical & Verification**
 
-### CDC
+    RTL 가설을 synthesis, STA, P&R과 verification evidence로 확인하고 다시 설계에 반영합니다.
 
-- [Clock Domain Crossing Overview](08_cdc/overview.md): crossing을 level, pulse, multi-bit, bundled data로 분류하고 구조를 선택합니다.
-- [Metastability](08_cdc/metastability.md): analog failure mechanism, containment, MTBF와 physical responsibility를 설명합니다.
-- [2FF Synchronizer](08_cdc/synchronizer.md): single-bit asynchronous level에 적합한 2FF 구조와 한계를 설명합니다.
-- [Pulse Crossing](08_cdc/pulse_crossing.md): stretch, toggle, handshake와 event-rate 조건을 비교합니다.
-- [Multi-Bit CDC](08_cdc/multi_bit_cdc.md): coherency, Gray pointer, FIFO와 reconvergence를 다룹니다.
-- [Bundled Data](08_cdc/bundled_data.md): payload stability와 synchronized control의 functional/physical contract를 설명합니다.
+    [Synthesis](11_synthesis/rtl_to_hardware_mapping.md) · [Physical](12_physical_aware/rtl_to_post_route_feedback.md) · [Verification](13_verification/assertion_driven_rtl.md)
 
-### Control Logic
+-   **14–15 · Anti-Patterns & Review**
 
-- [FSM Design](09_control_logic/fsm_design.md): protocol phase, ownership, request/completion/response acceptance와 back-to-back refill을 설계합니다.
-- [Priority and Simultaneous Events](09_control_logic/priority_and_simultaneous_events.md): 동시 사건을 priority, merge, reject 또는 queue로 분류하고 acceptance를 검증합니다.
-- [Pulse, Level, and Event](09_control_logic/pulse_level_event.md): same-domain edge detection, re-arm, sticky pending과 no-loss 조건을 다룹니다.
-- [Counter Boundary Design](09_control_logic/counter_boundary.md): terminal level/event, wrap·saturate·block 정책과 parameter 경계를 정의합니다.
-- [Illegal State Recovery](09_control_logic/illegal_state_recovery.md): encoding/protocol fault의 side-effect containment, recovery와 escalation을 설명합니다.
+    반복되는 실패 구조를 빠르게 식별하고 review 질문으로 설계 의도와 evidence를 확인합니다.
 
-### Datapath
+    [Anti-Patterns](14_anti_patterns/raw_clock_gating.md) · [Review Checklist](15_checklist/rtl_design_review_checklist.md)
 
-- [Datapath Width and Signedness](10_datapath/width_signedness.md): numeric representation, operand normalization, full-precision arithmetic와 explicit resize를 구현합니다.
-- [Overflow, Saturation, and Rounding](10_datapath/overflow_saturation_rounding.md): unsigned/signed overflow, saturation과 fixed-point rounding의 bit-exact 정책을 다룹니다.
-- [Datapath MUX and Select](10_datapath/mux_and_select.md): wide select topology, invalid/one-hot contract, late select와 routing 비용을 검토합니다.
-- [Datapath Parallel Pre-computation](10_datapath/parallel_precomputation.md): registered candidates와 select/valid alignment, speculative ownership과 commit point를 설계합니다.
+</div>
 
-### Synthesis-Aware RTL
+## 대표 가이드
 
-- [RTL to Hardware Mapping](11_synthesis/rtl_to_hardware_mapping.md): Elaboration, generic representation, optimization과 library mapping을 구분하고 RTL 구조 가설을 netlist 증거로 확인합니다.
-- [Enable and MUX Inference](11_synthesis/enable_and_mux_inference.md): Hold/clear priority, feedback MUX·enable cell·ICG 변환과 grouping의 실제 구현을 검토합니다.
-- [Constant and Dead Logic](11_synthesis/constant_dead_logic.md): Parameter, tie-off와 분석 가정을 구분하고 제거된 logic의 configuration·observer·initialization 계약을 확인합니다.
-- [Reading Synthesis Reports](11_synthesis/read_synthesis_reports.md): Run provenance와 coverage부터 timing, area, power, netlist cross-probe와 동일 조건 실험까지 연결합니다.
-
-### Physical-Aware RTL
-
-- [Fanout and Locality](12_physical_aware/fanout_and_locality.md): Load와 route geometry, local decode와 synchronous replica의 계약을 post-place/post-route 증거로 판단합니다.
-- [Congestion-Aware Structure](12_physical_aware/congestion_aware_structure.md): Routing demand/capacity와 pin access를 구분하고 local processing, communication width와 serialization의 기능·PPA 비용을 비교합니다.
-- [Hierarchy and Placement](12_physical_aware/hierarchy_and_placement.md): Logical/physical 경계, interface cut, port·macro affinity와 boundary register의 cycle 계약을 설계합니다.
-- [RTL to Post-Route Feedback](12_physical_aware/rtl_to_post_route_feedback.md): 단계별 증거를 원인·owner·승인·회귀 검증으로 연결하고 가설과 A/B 결과를 재현 가능하게 남깁니다.
-
-### Verification & Robustness
-
-- [Assertion-Driven RTL](13_verification/assertion_driven_rtl.md): Assumption·assertion·cover의 책임, sampling/NBA와 reset priority를 구분하고 vacuity와 검증 범위를 확인합니다.
-- [Corner-Case Matrix](13_verification/corner_case_matrix.md): State·boundary·동시 사건·시간 순서를 기대값 모델, checker, coverage와 재현 가능한 evidence로 연결합니다.
-- [Lint, Formal, and Equivalence](13_verification/lint_formal_equivalence.md): 검증 방법별 보장 범위와 전제를 구분하고 X·초기 상태·blackbox·반례를 회귀 검증으로 연결합니다.
-- [Reset and Mode Transition Verification](13_verification/reset_mode_transition_verification.md): Outstanding transaction의 drain/abort, mode commit, reset epoch와 clock stop/resume를 acceptance edge 기준으로 검증합니다.
-
-### Common RTL Anti-Patterns
-
-- [Raw Clock Gating](14_anti_patterns/raw_clock_gating.md): 조합 논리가 만든 clock edge의 실패 조건과 target별 안전한 clock-control 증거를 검토합니다.
-- [Free-Running Unused Counter](14_anti_patterns/free_running_unused_counter.md): 값의 live window를 찾아 Remove→Disable 순서로 불필요한 counter switching을 줄입니다.
-- [Reset Everything](14_anti_patterns/reset_everything.md): State inventory와 valid-guard contract로 필요한 reset과 습관적인 datapath reset을 구분합니다.
-- [Oversized Register](14_anti_patterns/oversized_register.md): Reachable range, boundary policy와 parameter corner를 근거로 width와 실제 mapped cone을 확인합니다.
-- [Deep Priority Chain](14_anti_patterns/deep_priority_chain.md): Source order의 실제 priority 계약과 selection depth·late control·fairness 증거를 검토합니다.
-- [Independent 2FF Bus](14_anti_patterns/independent_2ff_bus.md): Bit별 metastability containment와 word coherency를 구분하고 traffic에 맞는 CDC protocol을 선택합니다.
-- [MCP Used to Hide Timing](14_anti_patterns/mcp_used_to_hide_timing.md): Negative slack을 감추는 exception과 실제 multi-cycle capture 계약을 구분합니다.
-- [Excessive Pipeline](14_anti_patterns/excessive_pipeline.md): Stage 추가가 latency·II·alignment·physical cost를 감수할 만큼 실제 bottleneck을 분할하는지 검토합니다.
-- [Unnecessary Clear](14_anti_patterns/unnecessary_clear.md): 정상 동작 중 unowned payload를 0으로 쓰는 대신 valid·occupancy·epoch contract를 검토합니다.
-- [Enable Everywhere](14_anti_patterns/enable_everywhere.md): Fine-grain enable의 실제 mapping, upstream activity와 control-distribution 비용을 확인합니다.
-- [Large Decode Without Timing Review](14_anti_patterns/large_decode_without_timing_review.md): Wide decode를 late high-fanout control과 downstream MUX까지 포함한 timing/physical network로 분석합니다.
-- [Ignoring Synthesis Result and Fanout](14_anti_patterns/ignoring_synthesis_result_and_fanout.md): Unexpected removal과 실제 control distribution을 RTL→합성→STA→P&R 증거로 추적합니다.
-- [Assumption Hidden Only in SDC](14_anti_patterns/assumption_hidden_only_in_sdc.md): Timing exception과 mode 가정을 RTL·검증·CDC 계약, lifecycle과 변경 책임에 연결합니다.
-
-### Review
-
-- [RTL Design Review Checklist](15_checklist/rtl_design_review_checklist.md): Architecture부터 Verification까지 바로 사용할 수 있는 질문을 제공합니다.
+| 판단이 필요한 상황 | 먼저 읽을 문서 |
+|---|---|
+| 결과가 정말 next cycle에 필요한가? | [Latency, Throughput and II](02_architecture/latency_throughput_ii.md), [Pipeline](03_timing/pipeline.md), [MCP](03_timing/multi_cycle_path.md) |
+| 사용하지 않는 logic이 계속 움직이는가? | [Counter Optimization](04_low_power/counter_optimization.md), [Register Enable](04_low_power/register_enable.md), [Operand Isolation](04_low_power/operand_isolation.md) |
+| Clock gating boundary가 안전한가? | [Clock Gating](06_clock/clock_gating.md), [Root vs Function Clock](06_clock/root_vs_function_clock.md) |
+| Reset이 모든 FF에 필요한가? | [Resetless Datapath](07_reset/resetless_datapath.md), [Reset Area Cost](05_area/reset_area_cost.md) |
+| Crossing에 2FF가 적합한가? | [CDC Overview](08_cdc/overview.md), [2FF Synchronizer](08_cdc/synchronizer.md), [Multi-Bit CDC](08_cdc/multi_bit_cdc.md) |
+| RTL이 의도한 hardware로 합성됐는가? | [RTL to Hardware Mapping](11_synthesis/rtl_to_hardware_mapping.md), [Reading Synthesis Reports](11_synthesis/read_synthesis_reports.md) |
 
 ## 문서를 읽는 방법
 
@@ -201,24 +172,15 @@ Problem → Why it matters → Hardware view → RTL example
         → Trade-offs → Mistakes → Recommended pattern → Checklist
 ```
 
-코드 예제는 구현을 그대로 복사하기 위한 template이 아니라 hardware inference와 corner case를 논의하기 위한 최소 예제입니다. Reset polarity, protocol, clock-gating style, constraint syntax, library cell은 프로젝트별 methodology에 맞게 결정해야 합니다.
+코드 예제는 그대로 복사하는 template이 아니라 hardware inference와 corner case를 논의하기 위한 최소 예제입니다. Reset polarity, protocol, clock-gating style, constraint syntax와 library cell은 적용할 프로젝트의 requirement와 methodology에 맞게 결정해야 합니다.
 
-## 좋은 Design Review의 산출물
+??? info "공개 문서의 범위"
+    이 가이드의 synthesis mapping과 PPA 영향은 일반적인 방향을 설명합니다. 실제 결과는 standard-cell library, target frequency, tool, constraint, hierarchy, placement와 routing에 따라 달라질 수 있습니다.
 
-좋은 review는 “문제가 없어 보인다”로 끝나지 않습니다. 다음 증거가 서로 연결되어 있어야 합니다.
+    모든 diagram, code, 수치와 scenario는 공개 저장소에서 사용할 수 있는 generic example이어야 합니다. 회사, 고객, 제품, 내부 IP와 proprietary flow를 식별하거나 유추할 수 있는 내용은 포함하지 않습니다.
 
-- Requirement: latency, throughput, valid window, idle behavior
-- Architecture: register boundary, state transition, crossing protocol
-- RTL: priority와 signedness/width가 명시된 implementation
-- Verification: simultaneous event와 boundary를 포함한 test/assertion
-- Constraint: clock, I/O timing, CDC/MCP assumption의 정확한 대상
-- Report: critical path, area driver, switching hotspot, CDC result
-- Ownership: assumption이 변경될 때 함께 갱신할 RTL·SDC·verification·document
+## 다음 단계
 
-## 이 문서의 경계
-
-여기서 설명하는 synthesis mapping과 PPA 영향은 일반적인 방향입니다. 실제 결과는 standard-cell library, target frequency, synthesis/physical tool, constraint, hierarchy, placement와 routing에 따라 달라질 수 있습니다. “좋아질 것이다”라는 추정은 report 비교 전까지 가설로 취급합니다.
-
-이 저장소는 public repository입니다. 모든 diagram, code, 수치, scenario는 generic해야 하며 회사·고객·제품·내부 IP·proprietary flow를 식별하거나 유추할 수 있는 내용을 포함하지 않습니다.
-
-다음 단계로 [Introduction](00_introduction/overview.md)을 읽거나, 현재 설계를 검토해야 한다면 바로 [Design Review Checklist](15_checklist/rtl_design_review_checklist.md)부터 시작하세요.
+[What Makes Good RTL?](00_introduction/overview.md){ .md-button .md-button--primary }
+[Canonical Terminology](01_fundamentals/terminology.md){ .md-button }
+[RTL Design Review Checklist](15_checklist/rtl_design_review_checklist.md){ .md-button }

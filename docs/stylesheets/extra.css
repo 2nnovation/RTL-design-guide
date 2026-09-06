@@ -1,0 +1,225 @@
+/*
+ * Visual hierarchy for the RTL Design & Optimization Guide.
+ * Keep technical content in Markdown; use this file for shared presentation.
+ */
+
+:root {
+  --rtl-border: color-mix(in srgb, var(--md-default-fg-color) 16%, transparent);
+  --rtl-border-strong: color-mix(in srgb, var(--md-primary-fg-color) 48%, transparent);
+  --rtl-surface: color-mix(in srgb, var(--md-default-fg-color) 4%, transparent);
+  --rtl-surface-accent: color-mix(in srgb, var(--md-primary-fg-color) 8%, transparent);
+}
+
+.md-grid {
+  max-width: 88rem;
+}
+
+.md-typeset {
+  font-size: 0.82rem;
+  line-height: 1.75;
+}
+
+.md-typeset h1 {
+  margin-bottom: 1.1rem;
+  color: var(--md-default-fg-color);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.md-typeset h2 {
+  margin-top: 2.7em;
+  padding-top: 0.85em;
+  border-top: 1px solid var(--rtl-border);
+  color: var(--md-default-fg-color);
+  font-weight: 700;
+  letter-spacing: -0.018em;
+}
+
+.md-typeset hr + h2 {
+  margin-top: 1.2em;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.md-typeset h3 {
+  margin-top: 2em;
+  color: var(--md-default-fg-color);
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset h2 + h3 {
+  margin-top: 1.35em;
+}
+
+.md-typeset hr {
+  margin: 2.5em 0 0;
+  border-bottom: 1px solid var(--rtl-border);
+}
+
+.md-typeset blockquote {
+  margin: 1.25em 0 1.5em;
+  padding: 0.85em 1em;
+  border-left: 0.22rem solid var(--md-primary-fg-color);
+  border-radius: 0 0.35rem 0.35rem 0;
+  background: var(--rtl-surface-accent);
+  color: var(--md-default-fg-color);
+}
+
+.md-typeset blockquote p {
+  margin: 0;
+}
+
+.md-typeset pre > code {
+  border: 1px solid var(--rtl-border);
+  border-radius: 0.35rem;
+}
+
+.md-typeset table:not([class]) {
+  border: 1px solid var(--rtl-border);
+  border-radius: 0.35rem;
+}
+
+.md-typeset table:not([class]) th {
+  background: var(--rtl-surface-accent);
+  color: var(--md-default-fg-color);
+  font-weight: 700;
+}
+
+.md-typeset table:not([class]) td,
+.md-typeset table:not([class]) th {
+  padding: 0.75em 1em;
+  border-color: var(--rtl-border);
+}
+
+.md-typeset .admonition,
+.md-typeset details {
+  border: 1px solid var(--rtl-border);
+  border-left-width: 0.22rem;
+  border-radius: 0.4rem;
+  box-shadow: none;
+}
+
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > ol > li {
+  border: 1px solid var(--rtl-border);
+  border-radius: 0.55rem;
+  background: var(--rtl-surface);
+  box-shadow: none;
+  transition:
+    border-color 120ms ease,
+    transform 120ms ease,
+    box-shadow 120ms ease;
+}
+
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > ol > li:hover {
+  border-color: var(--rtl-border-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 0.3rem 0.8rem rgb(0 0 0 / 7%);
+}
+
+.md-typeset .md-button {
+  margin: 0.25rem 0.35rem 0.25rem 0;
+  border-radius: 0.35rem;
+}
+
+.md-nav__link {
+  line-height: 1.35;
+}
+
+.md-nav__link--active {
+  font-weight: 700;
+}
+
+.md-sidebar--primary .md-nav__link--active:not(.md-nav__container) {
+  margin-left: -0.55rem;
+  padding: 0.32rem 0.55rem;
+  border-left: 0.16rem solid var(--md-accent-fg-color);
+  border-radius: 0 0.25rem 0.25rem 0;
+  background: var(--rtl-surface-accent);
+}
+
+.md-sidebar--secondary .md-nav__link {
+  font-size: 0.69rem;
+  line-height: 1.35;
+}
+
+.md-sidebar--secondary .md-nav__title {
+  font-weight: 700;
+}
+
+.rtl-hero {
+  margin: 0 0 2.25rem;
+  padding: 1.7rem 1.8rem;
+  border: 1px solid var(--rtl-border);
+  border-left: 0.3rem solid var(--md-primary-fg-color);
+  border-radius: 0.6rem;
+  background:
+    linear-gradient(135deg, var(--rtl-surface-accent), transparent 72%);
+}
+
+.rtl-hero h1 {
+  margin: 0 0 0.65rem;
+}
+
+.rtl-hero > p:last-child {
+  margin-bottom: 0;
+}
+
+.rtl-kicker {
+  color: var(--md-primary-fg-color);
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+.rtl-chapter-map strong,
+.rtl-start-grid strong {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--md-default-fg-color);
+  font-size: 0.9rem;
+}
+
+@media screen and (min-width: 60em) {
+  .md-typeset .rtl-start-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+}
+
+[data-md-color-scheme="slate"] .rtl-hero .md-button:not(.md-button--primary) {
+  color: var(--md-default-fg-color);
+}
+
+@media screen and (max-width: 76.234375em) {
+  .md-grid {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 44.984375em) {
+  .md-typeset {
+    font-size: 0.8rem;
+    line-height: 1.68;
+  }
+
+  .md-typeset h1 {
+    font-size: 1.65rem;
+  }
+
+  .md-typeset h2 {
+    margin-top: 2.2em;
+  }
+
+  .rtl-hero {
+    margin-inline: -0.25rem;
+    padding: 1.2rem 1rem;
+  }
+
+  .rtl-hero .md-button {
+    display: block;
+    width: 100%;
+    margin: 0.45rem 0 0;
+    text-align: center;
+  }
+}
